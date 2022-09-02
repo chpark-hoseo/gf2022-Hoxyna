@@ -2,6 +2,8 @@
 //
 // written by changhoonpark@gmail.com
 
+// 실습환경 주석 추가
+
 
 #include "main.h"
 
