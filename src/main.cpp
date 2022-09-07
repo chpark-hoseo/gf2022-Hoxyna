@@ -2,7 +2,7 @@
 //
 // written by changhoonpark@gmail.com
 
-//실습 커밋 테스트
+// 실습 커밋 테스트
 
 #include "main.h"
 
