@@ -142,7 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\main.h" />
