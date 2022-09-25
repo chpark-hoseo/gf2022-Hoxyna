@@ -28,4 +28,5 @@ private:
     SDL_Rect m_destinationRectangle;
 
 	bool m_bRunning;
+	bool m_moveRight;
 };

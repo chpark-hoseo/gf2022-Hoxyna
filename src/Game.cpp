@@ -47,8 +47,18 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 
 void Game::update()
 {
-    //m_destinationRectangle.x++;
-    //SDL_Delay(10);
+    // 과제 1
+    if (m_destinationRectangle.x == 0)
+        m_moveRight = true;
+    if (m_destinationRectangle.x == 480 - m_sourceRectangle.w)
+        m_moveRight = false;
+
+    if (m_moveRight)
+        m_destinationRectangle.x++;
+    else
+        m_destinationRectangle.x--;
+
+    SDL_Delay(5);
 }
 
 void Game::render()
@@ -91,5 +101,6 @@ void Game::clean()
 {
     SDL_DestroyWindow(m_pWindow);
     SDL_DestroyRenderer(m_pRenderer);
+    SDL_DestroyTexture(m_pTexture); // 과제 3
     SDL_Quit();
 }
