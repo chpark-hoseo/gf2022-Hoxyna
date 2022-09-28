@@ -105,7 +105,7 @@ void Game::render()
     SDL_Point center;
     center.x = SCREEN_WIDTH / 2;
     center.y = SCREEN_HEIGHT / 2;
-    SDL_RenderCopyEx(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle, 45, &center, SDL_FLIP_HORIZONTAL);
+    SDL_RenderCopyEx(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle, 45, &center, SDL_FLIP_VERTICAL);
 
     SDL_RenderPresent(m_pRenderer);
 }
