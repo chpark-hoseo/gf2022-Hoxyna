@@ -52,17 +52,40 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
     //m_destinationRectangle.h = 50;
 
     // 苞力1
+    //m_sourceRectangle.x = 0;
+    //m_sourceRectangle.y = 0;
+    //
+    //m_sourceRectangle.w = 50;
+    //m_sourceRectangle.h = 50;
+    //
+    //m_destinationRectangle.x = 100;
+    //m_destinationRectangle.y = 100;
+    //
+    //m_destinationRectangle.w = 50;
+    //m_destinationRectangle.h = 50;
+
+    // 苞力2
+    //m_sourceRectangle.x = 50;
+    //m_sourceRectangle.y = 50;
+    //
+    //m_sourceRectangle.w = 50;
+    //m_sourceRectangle.h = 50;
+    //
+    //m_destinationRectangle.x = 100;
+    //m_destinationRectangle.y = 100;
+    //
+    //m_destinationRectangle.w = 50;
+    //m_destinationRectangle.h = 50;
+
+    // 苞力3
     m_sourceRectangle.x = 0;
     m_sourceRectangle.y = 0;
-
-    m_sourceRectangle.w = 50;
-    m_sourceRectangle.h = 50;
-
+    
     m_destinationRectangle.x = 0;
     m_destinationRectangle.y = 0;
-
-    m_destinationRectangle.w = 50;
-    m_destinationRectangle.h = 50;
+    
+    m_destinationRectangle.w = SCREEN_WIDTH;
+    m_destinationRectangle.h = SCREEN_HEIGHT;
 
     return true;
 }
@@ -76,7 +99,13 @@ void Game::render()
 {
     SDL_RenderClear(m_pRenderer);
 
-    SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
+    //SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
+    
+    // 苞力4
+    SDL_Point center;
+    center.x = SCREEN_WIDTH / 2;
+    center.y = SCREEN_HEIGHT / 2;
+    SDL_RenderCopyEx(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle, 45, &center, SDL_FLIP_HORIZONTAL);
 
     SDL_RenderPresent(m_pRenderer);
 }
