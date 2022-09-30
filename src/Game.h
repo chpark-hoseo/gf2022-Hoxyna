@@ -26,7 +26,11 @@ private:
     SDL_Texture* m_pTexture;
     SDL_Rect m_sourceRectangle;
     SDL_Rect m_destinationRectangle;
+	SDL_Texture* m_pTexture2;
+	SDL_Rect m_sourceRectangle2;
+	SDL_Rect m_destinationRectangle2;
 
 	bool m_bRunning;
 	bool m_moveRight;
+	bool m_input;
 };
