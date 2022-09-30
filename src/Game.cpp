@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <SDL2/SDL_image.h>
 #define SCREEN_WIDTH 480
 #define SCREEN_HEIGHT 640
 
@@ -13,7 +14,7 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 
             if (m_pRenderer != 0) {
                 SDL_SetRenderDrawColor(
-                    m_pRenderer, 255, 255, 255, 255);
+                    m_pRenderer, 255, 0, 0, 255);
             }
             else {
                 return false; // 랜더러 생성 실패
@@ -30,10 +31,8 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
     m_bRunning = true;
 
     // 실습
-    //SDL_Surface* pTempSurface = SDL_LoadBMP("Assets/animate.bmp");
-    // 과제1
-    SDL_Surface* pTempSurface = SDL_LoadBMP("Assets/kerbyEdit.bmp");
-    if (pTempSurface == NULL) return false; // BMP 불러오기 실패
+    SDL_Surface* pTempSurface = IMG_Load("Assets/animate-alpha.png");
+    if (pTempSurface == NULL) return false; // PNG 불러오기 실패
 
     m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
 
@@ -44,8 +43,8 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
     m_sourceRectangle.x = 0;
     m_sourceRectangle.y = 0;
 
-    m_sourceRectangle.w = 45;
-    m_sourceRectangle.h = 40;
+    m_sourceRectangle.w = 128;
+    //m_sourceRectangle.h = 40;
     
     m_destinationRectangle.x = 0;
     m_destinationRectangle.y = 0;
@@ -53,52 +52,36 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
     m_destinationRectangle.w = m_sourceRectangle.w;
     m_destinationRectangle.h = m_sourceRectangle.h;
 
-    // 과제2
-    //SDL_Surface* pTempSurface2 = SDL_LoadBMP("Assets/kerbyEdit.bmp");
-    //if (pTempSurface2 == NULL) return false; // BMP 불러오기 실패
-    //
-    //m_pTexture2 = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface2);
-    //
-    //SDL_FreeSurface(pTempSurface2);
-    //
-    //SDL_QueryTexture(m_pTexture2, NULL, NULL, &m_sourceRectangle2.w, &m_sourceRectangle2.h);
-    //
-    //m_sourceRectangle2.x = 0;
-    //m_sourceRectangle2.y = 0;
-    //
-    //m_sourceRectangle2.w = 45;
+    // 과제1
+    SDL_Surface* pTempSurface2 = IMG_Load("Assets/animate-alpha.png");
+    if (pTempSurface2 == NULL) return false; // PNG 불러오기 실패
+
+    m_pTexture2 = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface2);
+
+    SDL_FreeSurface(pTempSurface2);
+
+    SDL_QueryTexture(m_pTexture2, NULL, NULL, &m_sourceRectangle2.w, &m_sourceRectangle2.h);
+
+    m_sourceRectangle2.x = 0;
+    m_sourceRectangle2.y = 0;
+
+    m_sourceRectangle2.w = 128;
     //m_sourceRectangle2.h = 40;
-    //
-    //m_destinationRectangle2.x = 100;
-    //m_destinationRectangle2.y = 100;
-    //
-    //m_destinationRectangle2.w = m_sourceRectangle2.w;
-    //m_destinationRectangle2.h = m_sourceRectangle2.h;
 
-    // 과제3 완료
+    m_destinationRectangle2.x = 100;
+    m_destinationRectangle2.y = 100;
+
+    m_destinationRectangle2.w = m_sourceRectangle2.w;
+    m_destinationRectangle2.h = m_sourceRectangle2.h;
     
-    // 과제4 자유주제: 애니메이션 좌우이동
-    m_moveRight = true;
-
     return true;
 }
 
 void Game::update()
 {
-    m_sourceRectangle.x = 45 * ((SDL_GetTicks() / 100) % 10);
-
-    // 과제2
-    //m_sourceRectangle2.x = 45 * ((SDL_GetTicks() / 200) % 10);
-    
-    // 과제4
-    if (m_input)
-    {
-        if (m_moveRight)
-            m_destinationRectangle.x++;
-        else
-            m_destinationRectangle.x--;
-        SDL_Delay(5);
-    }
+    m_sourceRectangle.x = 128 * ((SDL_GetTicks() / 100) % 6);
+    // 과제1
+    m_sourceRectangle2.x = 128 * ((SDL_GetTicks() / 200) % 6);
 }
 
 void Game::render()
@@ -106,15 +89,8 @@ void Game::render()
     SDL_RenderClear(m_pRenderer);
 
     SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
-
-    // 과제2
-    //SDL_RenderCopy(m_pRenderer, m_pTexture2, &m_sourceRectangle2, &m_destinationRectangle2);
-
-    // 과제4
-    if (m_moveRight)
-        SDL_RenderCopyEx(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle, 0, NULL, SDL_FLIP_NONE);
-    else
-        SDL_RenderCopyEx(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle, 0, NULL, SDL_FLIP_HORIZONTAL);
+    // 과제1
+    SDL_RenderCopy(m_pRenderer, m_pTexture2, &m_sourceRectangle2, &m_destinationRectangle2);
 
     SDL_RenderPresent(m_pRenderer);
 }
@@ -136,16 +112,9 @@ void Game::handleEvents()
             break;
         case SDL_KEYDOWN:
             printf("%d 키가 눌렸어요!\n", event.key.keysym.sym);
-            // 과제4
-            if (event.key.keysym.sym == 97)
-                m_moveRight = false;
-            else if (event.key.keysym.sym == 100)
-                m_moveRight = true;
-            m_input = true;
             break;
         case SDL_KEYUP:
             printf("%d 키가 때졌어요!\n", event.key.keysym.sym);
-            m_input = false;
             break;
         default:
             break;
@@ -159,8 +128,7 @@ void Game::clean()
     SDL_DestroyRenderer(m_pRenderer);
 
     SDL_DestroyTexture(m_pTexture);
-
-    // 과제4
+    // 과제1
     SDL_DestroyTexture(m_pTexture2);
 
     SDL_Quit();
