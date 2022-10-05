@@ -73,6 +73,28 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 
     m_destinationRectangle2.w = m_sourceRectangle2.w;
     m_destinationRectangle2.h = m_sourceRectangle2.h;
+
+    // 과제2
+    SDL_Surface* pTempSurface3 = IMG_Load("Assets/NewPiskel.png");
+    if (pTempSurface3 == NULL) return false; // PNG 불러오기 실패
+
+    m_pTexture3 = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface3);
+
+    SDL_FreeSurface(pTempSurface3);
+
+    SDL_QueryTexture(m_pTexture3, NULL, NULL, &m_sourceRectangle3.w, &m_sourceRectangle3.h);
+
+    m_sourceRectangle3.x = 0;
+    m_sourceRectangle3.y = 0;
+
+    m_sourceRectangle3.w = 32;
+    m_sourceRectangle3.h = 32;
+
+    m_destinationRectangle3.x = 200;
+    m_destinationRectangle3.y = 200;
+
+    m_destinationRectangle3.w = m_sourceRectangle3.w;
+    m_destinationRectangle3.h = m_sourceRectangle3.h;
     
     return true;
 }
@@ -82,6 +104,8 @@ void Game::update()
     m_sourceRectangle.x = 128 * ((SDL_GetTicks() / 100) % 6);
     // 과제1
     m_sourceRectangle2.x = 128 * ((SDL_GetTicks() / 200) % 6);
+    // 과제2
+    m_sourceRectangle3.x = 32 * ((SDL_GetTicks() / 150) % 4);
 }
 
 void Game::render()
@@ -91,6 +115,8 @@ void Game::render()
     SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
     // 과제1
     SDL_RenderCopy(m_pRenderer, m_pTexture2, &m_sourceRectangle2, &m_destinationRectangle2);
+    // 과제2
+    SDL_RenderCopy(m_pRenderer, m_pTexture3, &m_sourceRectangle3, &m_destinationRectangle3);
 
     SDL_RenderPresent(m_pRenderer);
 }
@@ -130,6 +156,8 @@ void Game::clean()
     SDL_DestroyTexture(m_pTexture);
     // 과제1
     SDL_DestroyTexture(m_pTexture2);
+    // 과제2
+    SDL_DestroyTexture(m_pTexture3);
 
     SDL_Quit();
 }
