@@ -1,5 +1,4 @@
 #include "Game.h"
-#include <SDL2/SDL_image.h>
 #define SCREEN_WIDTH 480
 #define SCREEN_HEIGHT 640
 
@@ -31,92 +30,22 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
     m_bRunning = true;
 
     // 실습
-    SDL_Surface* pTempSurface = IMG_Load("Assets/animate-alpha.png");
-    if (pTempSurface == NULL) return false; // PNG 불러오기 실패
-
-    m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
-
-    SDL_FreeSurface(pTempSurface);
-
-    SDL_QueryTexture(m_pTexture, NULL, NULL, &m_sourceRectangle.w, &m_sourceRectangle.h);
-
-    m_sourceRectangle.x = 0;
-    m_sourceRectangle.y = 0;
-
-    m_sourceRectangle.w = 128;
-    //m_sourceRectangle.h = 40;
-    
-    m_destinationRectangle.x = 0;
-    m_destinationRectangle.y = 0;
-    
-    m_destinationRectangle.w = m_sourceRectangle.w;
-    m_destinationRectangle.h = m_sourceRectangle.h;
-
-    // 과제1
-    SDL_Surface* pTempSurface2 = IMG_Load("Assets/animate-alpha.png");
-    if (pTempSurface2 == NULL) return false; // PNG 불러오기 실패
-
-    m_pTexture2 = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface2);
-
-    SDL_FreeSurface(pTempSurface2);
-
-    SDL_QueryTexture(m_pTexture2, NULL, NULL, &m_sourceRectangle2.w, &m_sourceRectangle2.h);
-
-    m_sourceRectangle2.x = 0;
-    m_sourceRectangle2.y = 0;
-
-    m_sourceRectangle2.w = 128;
-    //m_sourceRectangle2.h = 40;
-
-    m_destinationRectangle2.x = 100;
-    m_destinationRectangle2.y = 100;
-
-    m_destinationRectangle2.w = m_sourceRectangle2.w;
-    m_destinationRectangle2.h = m_sourceRectangle2.h;
-
-    // 과제2
-    SDL_Surface* pTempSurface3 = IMG_Load("Assets/NewPiskel.png");
-    if (pTempSurface3 == NULL) return false; // PNG 불러오기 실패
-
-    m_pTexture3 = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface3);
-
-    SDL_FreeSurface(pTempSurface3);
-
-    SDL_QueryTexture(m_pTexture3, NULL, NULL, &m_sourceRectangle3.w, &m_sourceRectangle3.h);
-
-    m_sourceRectangle3.x = 0;
-    m_sourceRectangle3.y = 0;
-
-    m_sourceRectangle3.w = 32;
-    m_sourceRectangle3.h = 32;
-
-    m_destinationRectangle3.x = 200;
-    m_destinationRectangle3.y = 200;
-
-    m_destinationRectangle3.w = 100;
-    m_destinationRectangle3.h = 100;
+    m_textureManager.load("Assets/animate-alpha.png", "animate", m_pRenderer);
     
     return true;
 }
 
 void Game::update()
 {
-    m_sourceRectangle.x = 128 * ((SDL_GetTicks() / 100) % 6);
-    // 과제1
-    m_sourceRectangle2.x = 128 * ((SDL_GetTicks() / 200) % 6);
-    // 과제2
-    m_sourceRectangle3.x = 32 * ((SDL_GetTicks() / 150) % 4);
+    m_currentFrame = ((SDL_GetTicks() / 100) % 6);
 }
 
 void Game::render()
 {
     SDL_RenderClear(m_pRenderer);
 
-    SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
-    // 과제1
-    SDL_RenderCopy(m_pRenderer, m_pTexture2, &m_sourceRectangle2, &m_destinationRectangle2);
-    // 과제2
-    SDL_RenderCopy(m_pRenderer, m_pTexture3, &m_sourceRectangle3, &m_destinationRectangle3);
+    m_textureManager.draw("animate", 0, 0, 128, 82, m_pRenderer);
+    m_textureManager.drawFrame("animate", 100, 100, 128, 82, 0, m_currentFrame, m_pRenderer);
 
     SDL_RenderPresent(m_pRenderer);
 }
@@ -152,12 +81,7 @@ void Game::clean()
 {
     SDL_DestroyWindow(m_pWindow);
     SDL_DestroyRenderer(m_pRenderer);
-
-    SDL_DestroyTexture(m_pTexture);
-    // 과제1
-    SDL_DestroyTexture(m_pTexture2);
-    // 과제2
-    SDL_DestroyTexture(m_pTexture3);
+    m_textureManager.destroyTexture("animate");
 
     SDL_Quit();
 }

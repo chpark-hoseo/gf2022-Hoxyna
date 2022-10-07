@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
+#include <SDL2/SDL_image.h>
+#include "TextureManager.h"
 
 class Game
 {
@@ -22,18 +24,8 @@ public:
 private:
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
-
-    SDL_Texture* m_pTexture;
-    SDL_Rect m_sourceRectangle;
-    SDL_Rect m_destinationRectangle;
-	SDL_Texture* m_pTexture2;
-	SDL_Rect m_sourceRectangle2;
-	SDL_Rect m_destinationRectangle2;
-	SDL_Texture* m_pTexture3;
-	SDL_Rect m_sourceRectangle3;
-	SDL_Rect m_destinationRectangle3;
+	TextureManager m_textureManager;
+	int m_currentFrame;
 
 	bool m_bRunning;
-	bool m_moveRight;
-	bool m_input;
 };
