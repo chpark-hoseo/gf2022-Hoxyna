@@ -31,6 +31,8 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 
     // 실습
     m_textureManager.load("Assets/animate-alpha.png", "animate", m_pRenderer);
+    // 과제1
+    m_textureManager.load("Assets/kirbyEdit.bmp", "kirby", m_pRenderer);
     
     return true;
 }
@@ -38,6 +40,9 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 void Game::update()
 {
     m_currentFrame = ((SDL_GetTicks() / 100) % 6);
+    // 과제1
+    m_kirbyFrame_walk = ((SDL_GetTicks() / 100) % 10);
+    m_kirbyFrame_idle = ((SDL_GetTicks() / 1000) % 2);
 }
 
 void Game::render()
@@ -46,6 +51,11 @@ void Game::render()
 
     m_textureManager.draw("animate", 0, 0, 128, 82, m_pRenderer);
     m_textureManager.drawFrame("animate", 100, 100, 128, 82, 0, m_currentFrame, m_pRenderer);
+    // 과제1
+    if (m_isWalking)
+        m_textureManager.drawFrame("kirby", 200, 200, 45, 40, 0, m_kirbyFrame_walk, m_pRenderer);
+    else
+        m_textureManager.drawFrame("kirby", 200, 200, 45, 40, 1, m_kirbyFrame_idle, m_pRenderer);
 
     SDL_RenderPresent(m_pRenderer);
 }
@@ -67,9 +77,11 @@ void Game::handleEvents()
             break;
         case SDL_KEYDOWN:
             printf("%d 키가 눌렸어요!\n", event.key.keysym.sym);
+            m_isWalking = true;
             break;
         case SDL_KEYUP:
             printf("%d 키가 때졌어요!\n", event.key.keysym.sym);
+            m_isWalking = false;
             break;
         default:
             break;
@@ -82,6 +94,7 @@ void Game::clean()
     SDL_DestroyWindow(m_pWindow);
     SDL_DestroyRenderer(m_pRenderer);
     m_textureManager.destroyTexture("animate");
+    m_textureManager.destroyTexture("kirby");
 
     SDL_Quit();
 }
