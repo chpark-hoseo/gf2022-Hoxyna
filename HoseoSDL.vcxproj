@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="include\main.h" />
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\Singleton.h" />
     <ClInclude Include="src\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>

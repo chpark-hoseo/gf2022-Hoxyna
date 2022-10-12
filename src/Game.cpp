@@ -1,7 +1,10 @@
+// 과제1 완료
+
 #include "Game.h"
 #define SCREEN_WIDTH 480
 #define SCREEN_HEIGHT 640
 
+TextureManager* TextureManager::s_pInstance = 0;
 
 bool Game::init(const char* title, int xpos, int ypos, int height, int width, int flags)
 {
@@ -29,10 +32,10 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 
     m_bRunning = true;
 
-    // 실습
-    m_textureManager.load("Assets/animate-alpha.png", "animate", m_pRenderer);
-    // 과제1
-    m_textureManager.load("Assets/kirbyEdit.bmp", "kirby", m_pRenderer);
+    if (!TheTextureManager::Instance()->load("Assets/animate-alpha.png", "animate", m_pRenderer))
+    {
+        return false;
+    }
     
     return true;
 }
@@ -40,22 +43,15 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 void Game::update()
 {
     m_currentFrame = ((SDL_GetTicks() / 100) % 6);
-    // 과제1
-    m_kirbyFrame_walk = ((SDL_GetTicks() / 100) % 10);
-    m_kirbyFrame_idle = ((SDL_GetTicks() / 1000) % 2);
 }
 
 void Game::render()
 {
     SDL_RenderClear(m_pRenderer);
 
-    m_textureManager.draw("animate", 0, 0, 128, 82, m_pRenderer);
-    m_textureManager.drawFrame("animate", 100, 100, 128, 82, 0, m_currentFrame, m_pRenderer);
-    // 과제1
-    if (m_isWalking)
-        m_textureManager.drawFrame("kirby", 200, 200, 45, 40, 0, m_kirbyFrame_walk, m_pRenderer);
-    else
-        m_textureManager.drawFrame("kirby", 200, 200, 45, 40, 1, m_kirbyFrame_idle, m_pRenderer);
+    TheTextureManager::Instance()->draw("animate", 0, 0, 128, 82, m_pRenderer);
+
+    TheTextureManager::Instance()->drawFrame("animate", 100, 100, 128, 82, 0, m_currentFrame, m_pRenderer);
 
     SDL_RenderPresent(m_pRenderer);
 }
@@ -73,15 +69,12 @@ void Game::handleEvents()
         switch (event.type)
         {
         case SDL_QUIT:
-            m_bRunning = false;
             break;
         case SDL_KEYDOWN:
             printf("%d 키가 눌렸어요!\n", event.key.keysym.sym);
-            m_isWalking = true;
             break;
         case SDL_KEYUP:
             printf("%d 키가 때졌어요!\n", event.key.keysym.sym);
-            m_isWalking = false;
             break;
         default:
             break;
@@ -93,8 +86,13 @@ void Game::clean()
 {
     SDL_DestroyWindow(m_pWindow);
     SDL_DestroyRenderer(m_pRenderer);
-    m_textureManager.destroyTexture("animate");
-    m_textureManager.destroyTexture("kirby");
+    TheTextureManager::Instance()->destroyTexture("animate"); // 과제2 완료
 
     SDL_Quit();
 }
+
+// 과제3: 일반 멤버 변수/함수 는 클래스객체를 생성하면 각 객체가 멤버변수를 가지고, 클래스객체가 없다면 함수를 호출할 수 없습니다. 
+// 하지만, 정적 멤버 변수/함수 는 클래스객체를 생성하지않아도 클래스 이름만으로 함수를 호출할 수 있으며, 
+// 정적 멤버 변수는 해당 클래스의 모든 객체들이 공유합니다.
+
+// 과제4: 객체 생성 전에도 메모리가 존재하기에, 객체 생성 전에 반드시 미리 초기화를 해주어야 한다.

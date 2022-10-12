@@ -24,11 +24,7 @@ public:
 private:
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
-	TextureManager m_textureManager;
 	int m_currentFrame;
-	int m_kirbyFrame_walk;
-	int m_kirbyFrame_idle;
 
 	bool m_bRunning;
-	bool m_isWalking;
 };
