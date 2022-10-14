@@ -24,7 +24,15 @@ public:
 private:
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
-	int m_currentFrame;
+	int m_kirbyIdleFrame;
+	int m_kirbyMoveFrame;
 
 	bool m_bRunning;
+	bool m_bInput;
+	bool m_bMoveLeft;
+	bool m_bMoveRight;
+	bool m_bMoveUp;
+	bool m_bMoveDown;
+	bool m_bLookLeft;
+	int kirbyX, kirbyY;
 };
