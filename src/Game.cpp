@@ -54,10 +54,6 @@ void Game::update()
             kirbyX++;
         if (m_bMoveLeft)
             kirbyX--;
-        if (m_bMoveUp)
-            kirbyY--;
-        if (m_bMoveDown)
-            kirbyY++;
     }
     SDL_Delay(5);
 }
@@ -113,12 +109,6 @@ void Game::handleEvents()
                 m_bMoveRight = true;
                 m_bLookLeft = false;
                 break;
-            case 115:
-                m_bMoveDown = true;
-                break;
-            case 119:
-                m_bMoveUp = true;
-                break;
             }
             break;
         case SDL_KEYUP:
@@ -131,12 +121,6 @@ void Game::handleEvents()
                 break;
             case 100:
                 m_bMoveRight = false;
-                break;
-            case 115:
-                m_bMoveDown = false;
-                break;
-            case 119:
-                m_bMoveUp = false;
                 break;
             }
             break;

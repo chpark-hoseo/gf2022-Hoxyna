@@ -31,8 +31,6 @@ private:
 	bool m_bInput;
 	bool m_bMoveLeft;
 	bool m_bMoveRight;
-	bool m_bMoveUp;
-	bool m_bMoveDown;
 	bool m_bLookLeft;
 	int kirbyX, kirbyY;
 };
