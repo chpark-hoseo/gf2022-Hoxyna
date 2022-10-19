@@ -35,14 +35,15 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
         return false;
     }
 
-    kirbyY = SCREEN_HEIGHT - 200;
-    gravity = 1;
-
     if (!TheTextureManager::Instance()->load("Assets/19201080.jpg", "19201080", m_pRenderer))
     {
         return false;
     }
     
+    boxLTRB[0].L = 100; boxLTRB[0].T = 100;
+    boxLTRB[0].W = 100; boxLTRB[0].H = 100;
+    boxLTRB[0].R = boxLTRB[0].L + boxLTRB[0].W; boxLTRB[0].B = boxLTRB[0].T + boxLTRB[0].H;
+
     return true;
 }
 
@@ -51,23 +52,21 @@ void Game::update()
     m_kirbyIdleFrame = ((SDL_GetTicks() / 500) % 2);
     m_kirbyMoveFrame = ((SDL_GetTicks() / 100) % 10);
 
-    if (kirbyY < SCREEN_HEIGHT - 40)
-    {
-        gravity = 1;
-        kirbyY += gravity;
-    }
-    else
-    {
-        gravity = 0;
-        jumpCount = 0;
-    }
+    kirbyR = kirbyX + 45;
+    kirbyB = kirbyY + 40;
+
+    //if (kirbyX < boxLTRB[0].L && kirbyY < boxLTRB[0].T)
 
     if (m_bInput)
     {
         if (m_bMoveRight)
             kirbyX++;
-        if (m_bMoveLeft)
+        else if (m_bMoveLeft)
             kirbyX--;
+        else if (m_bMoveUp)
+            kirbyY--;
+        else if (m_bMoveDown)
+            kirbyY++;
     }
     SDL_Delay(5);
 }
@@ -76,7 +75,8 @@ void Game::render()
 {
     SDL_RenderClear(m_pRenderer);
 
-    TheTextureManager::Instance()->draw("19201080", 0, 0, 1920, 1080, m_pRenderer);
+    //TheTextureManager::Instance()->draw("19201080", 0, 0, 1920, 1080, m_pRenderer);
+    TheTextureManager::Instance()->draw("19201080", boxLTRB[0].L, boxLTRB[0].T, boxLTRB[0].W, boxLTRB[0].H, m_pRenderer);
 
     if (!m_bInput)
     {
@@ -114,12 +114,6 @@ void Game::handleEvents()
             printf("%d 키가 눌렸어요!\n", event.key.keysym.sym);
             switch (event.key.keysym.sym)
             {
-            case 32:
-                if (jumpCount < 2)
-                {
-                    kirbyY -= 30;
-                }
-                break;
             case 97:
                 m_bInput = true;
                 m_bMoveLeft = true;
@@ -129,6 +123,14 @@ void Game::handleEvents()
                 m_bInput = true;
                 m_bMoveRight = true;
                 m_bLookLeft = false;
+                break;
+            case 115:
+                m_bInput = true;
+                m_bMoveDown = true;
+                break;
+            case 119:
+                m_bInput = true;
+                m_bMoveUp = true;
                 break;
             }
             break;
@@ -142,6 +144,12 @@ void Game::handleEvents()
                 break;
             case 100:
                 m_bMoveRight = false;
+                break;
+            case 115:
+                m_bMoveDown = false;
+                break;
+            case 119:
+                m_bMoveUp = false;
                 break;
             }
             break;

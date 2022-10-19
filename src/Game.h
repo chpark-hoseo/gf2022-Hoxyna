@@ -8,6 +8,10 @@
 #include <SDL2/SDL_image.h>
 #include "TextureManager.h"
 
+struct LTRB {
+	int L, T, W, H, R, B;
+};
+
 class Game
 {
 public:
@@ -32,8 +36,8 @@ private:
 	bool m_bMoveLeft;
 	bool m_bMoveRight;
 	bool m_bLookLeft;
-	int kirbyX, kirbyY;
-
-	int gravity;
-	int jumpCount;
+	bool m_bMoveUp;
+	bool m_bMoveDown;
+	int kirbyX, kirbyY, kirbyR, kirbyB;
+	LTRB boxLTRB[1];
 };
