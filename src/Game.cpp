@@ -30,10 +30,13 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 
     m_bRunning = true;
 
-    if (!TheTextureManager::Instance()->load("Assets/kirbyEdit.bmp", "kirby", m_pRenderer))
+    if (!TheTextureManager::Instance()->load("Assets/kirbyEdit-alpha.png", "kirby", m_pRenderer))
     {
         return false;
     }
+
+    kirbyY = SCREEN_HEIGHT - 200;
+    gravity = 1;
 
     if (!TheTextureManager::Instance()->load("Assets/19201080.jpg", "19201080", m_pRenderer))
     {
@@ -48,16 +51,23 @@ void Game::update()
     m_kirbyIdleFrame = ((SDL_GetTicks() / 500) % 2);
     m_kirbyMoveFrame = ((SDL_GetTicks() / 100) % 10);
 
+    if (kirbyY < SCREEN_HEIGHT - 40)
+    {
+        gravity = 1;
+        kirbyY += gravity;
+    }
+    else
+    {
+        gravity = 0;
+        jumpCount = 0;
+    }
+
     if (m_bInput)
     {
         if (m_bMoveRight)
             kirbyX++;
         if (m_bMoveLeft)
             kirbyX--;
-        if (m_bMoveUp)
-            kirbyY--;
-        if (m_bMoveDown)
-            kirbyY++;
     }
     SDL_Delay(5);
 }
@@ -102,22 +112,23 @@ void Game::handleEvents()
             break;
         case SDL_KEYDOWN:
             printf("%d 키가 눌렸어요!\n", event.key.keysym.sym);
-            m_bInput = true;
             switch (event.key.keysym.sym)
             {
+            case 32:
+                if (jumpCount < 2)
+                {
+                    kirbyY -= 30;
+                }
+                break;
             case 97:
+                m_bInput = true;
                 m_bMoveLeft = true;
                 m_bLookLeft = true;
                 break;
             case 100:
+                m_bInput = true;
                 m_bMoveRight = true;
                 m_bLookLeft = false;
-                break;
-            case 115:
-                m_bMoveDown = true;
-                break;
-            case 119:
-                m_bMoveUp = true;
                 break;
             }
             break;
@@ -131,12 +142,6 @@ void Game::handleEvents()
                 break;
             case 100:
                 m_bMoveRight = false;
-                break;
-            case 115:
-                m_bMoveDown = false;
-                break;
-            case 119:
-                m_bMoveUp = false;
                 break;
             }
             break;
