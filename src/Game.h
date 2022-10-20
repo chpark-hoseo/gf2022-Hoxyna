@@ -1,5 +1,4 @@
-#pragma once // 과제 2. 전처리기 추가하기
-// 과제3. 링커->시스템->하위 시스템: 콘솔 설정 완료
+#pragma once
 
 #include <SDL2/SDL.h>
 #include <stdlib.h>
@@ -7,6 +6,10 @@
 #include <stdio.h>
 #include <SDL2/SDL_image.h>
 #include "TextureManager.h"
+
+struct XYWH {
+	int x,y,w,h;
+};
 
 class Game
 {
@@ -31,6 +34,12 @@ private:
 	bool m_bInput;
 	bool m_bMoveLeft;
 	bool m_bMoveRight;
+	bool m_bMoveUp;
+	bool m_bMoveDown;
 	bool m_bLookLeft;
+
 	int kirbyX, kirbyY;
+
+	XYWH xywh[100];
+	XYWH keyXYWH;
 };
