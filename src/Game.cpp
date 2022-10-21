@@ -16,7 +16,7 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 
             if (m_pRenderer != 0) {
                 SDL_SetRenderDrawColor(
-                    m_pRenderer, 0, 0, 255, 255);
+                    m_pRenderer, 0, 0, 0, 255);
             }
             else {
                 return false; // 랜더러 생성 실패
@@ -137,7 +137,7 @@ void Game::render()
         TheTextureManager::Instance()->draw("wall_1", xywh[i].x, xywh[i].y, xywh[i].w, xywh[i].h, m_pRenderer);
     }
 
-    TheTextureManager::Instance()->draw("key_silver", keyXYWH.x, keyXYWH.y, keyXYWH.w, keyXYWH.h, m_pRenderer, SDL_FLIP_HORIZONTAL);
+    TheTextureManager::Instance()->draw("key_silver", keyXYWH.x, keyXYWH.y, keyXYWH.w, keyXYWH.h, m_pRenderer, SDL_FLIP_NONE);
 
     if (!m_bInput)
     {
