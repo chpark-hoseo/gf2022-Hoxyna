@@ -5,6 +5,8 @@
 #include <SDL2/SDL_image.h>
 #include "TextureManager.h"
 
+#include <algorithm>
+
 #define SCREEN_WIDTH 480
 #define SCREEN_HEIGHT 640
 
@@ -41,34 +43,49 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
         return false;
     }
 
-    m_go.load(100, 100, 128, 82, "animate");
-    m_player.load(300, 300, 128, 82, "animate");
-    m_mon1.load(100, 400, 128, 82, "animate");
-    m_mon1.set_speed(1);
-    m_mon2.load(300, 500, 128, 82, "animate");
-    m_mon2.set_speed(5);
+    GameObject* m_go = new GameObject();
+    GameObject* m_player = new Player();
+    Monster* m_mon1 = new Monster();
+
+    m_go->load(100, 100, 128, 82, "animate");
+    m_player->load(300, 300, 128, 82, "animate");
+    m_mon1->load(100, 500, 128, 82, "animate");
+    m_mon1->set_speed(3);
+
+    m_gameObjects.push_back(m_go);
+    m_gameObjects.push_back(m_player);
+    m_monsters.push_back(m_mon1);
 
     return true;
 }
 
 void Game::update()
 {
-    m_go.update();
-    m_player.update();
-    m_mon1.update();
-    m_mon2.update();
+    for (int i = 0; i < m_gameObjects.size(); i++)
+    {
+        m_gameObjects[i]->update();
+    }
+    for (int i = 0; i < m_monsters.size(); i++)
+    {
+        m_monsters[i]->update();
+    }
 }
 
 void Game::render()
 {
-    SDL_RenderClear(m_pRenderer);      
- 
-    m_go.draw(m_pRenderer);
-    m_player.draw(m_pRenderer);
-    m_mon1.draw(m_pRenderer);
-    m_mon2.draw(m_pRenderer);
+    SDL_RenderClear(m_pRenderer);
 
-    SDL_RenderPresent(m_pRenderer); 
+    for (int i = 0; i < m_gameObjects.size(); i++)
+    {
+        m_gameObjects[i]->draw(m_pRenderer);
+    }
+    for (int i = 0; i < m_monsters.size(); i++)
+    {
+        m_monsters[i]->draw(m_pRenderer);
+    }
+
+    SDL_RenderPresent(m_pRenderer);
+
 }
 
 bool Game::running()

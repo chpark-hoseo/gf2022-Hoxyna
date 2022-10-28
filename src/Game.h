@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
+#include <vector>
 #include "GameObject.h"
 #include "Player.h"
 #include "Monster.h"
@@ -24,9 +25,6 @@ private:
 
 	bool m_bRunning;
 
-	GameObject m_go;
-	Player m_player;
-
-	Monster m_mon1;
-	Monster m_mon2;
+	std::vector<GameObject*> m_gameObjects;
+	std::vector<Monster*> m_monsters;
 };
