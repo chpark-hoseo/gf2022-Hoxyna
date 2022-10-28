@@ -1,12 +1,8 @@
-#pragma once // 과제 2. 전처리기 추가하기
-// 과제3. 링커->시스템->하위 시스템: 콘솔 설정 완료
-
+#pragma once
 #include <SDL2/SDL.h>
-#include <stdlib.h>
-#include <time.h>
-#include <stdio.h>
-#include <SDL2/SDL_image.h>
-#include "TextureManager.h"
+#include "GameObject.h"
+#include "Player.h"
+#include "Monster.h"
 
 class Game
 {
@@ -27,4 +23,10 @@ private:
 	int m_currentFrame;
 
 	bool m_bRunning;
+
+	GameObject m_go;
+	Player m_player;
+
+	Monster m_mon1;
+	Monster m_mon2;
 };
