@@ -26,5 +26,4 @@ private:
 	bool m_bRunning;
 
 	std::vector<GameObject*> m_gameObjects;
-	std::vector<Monster*> m_monsters;
 };

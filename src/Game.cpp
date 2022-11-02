@@ -54,7 +54,7 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 
     m_gameObjects.push_back(m_go);
     m_gameObjects.push_back(m_player);
-    m_monsters.push_back(m_mon1);
+    m_gameObjects.push_back(m_mon1);
 
     return true;
 }
@@ -65,10 +65,6 @@ void Game::update()
     {
         m_gameObjects[i]->update();
     }
-    for (int i = 0; i < m_monsters.size(); i++)
-    {
-        m_monsters[i]->update();
-    }
 }
 
 void Game::render()
@@ -78,10 +74,6 @@ void Game::render()
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
         m_gameObjects[i]->draw(m_pRenderer);
-    }
-    for (int i = 0; i < m_monsters.size(); i++)
-    {
-        m_monsters[i]->draw(m_pRenderer);
     }
 
     SDL_RenderPresent(m_pRenderer);
