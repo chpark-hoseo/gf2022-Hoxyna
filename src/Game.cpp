@@ -59,12 +59,19 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
     return true;
 }
 
+void Game::func(int i)
+{
+    m_gameObjects[i]->update();
+};
+
 void Game::update()
 {
-    for (int i = 0; i < m_gameObjects.size(); i++)
-    {
-        m_gameObjects[i]->update();
-    }
+    //for (int i = 0; i < m_gameObjects.size(); i++)
+    //{
+    //    m_gameObjects[i]->update();
+    //}
+    
+    std::for_each(m_gameObjects.begin(), m_gameObjects.end(), func);
 }
 
 void Game::render()
@@ -77,7 +84,6 @@ void Game::render()
     }
 
     SDL_RenderPresent(m_pRenderer);
-
 }
 
 bool Game::running()

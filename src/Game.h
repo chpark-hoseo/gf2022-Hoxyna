@@ -18,6 +18,8 @@ public:
 	void handleEvents();
 	void clean();
 
+	void func(int i);
+
 private:
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
