@@ -5,6 +5,10 @@
 #include <SDL2/SDL_image.h>
 #include "TextureManager.h"
 
+#include "Player.h"
+//#include "Monster.h"
+#include "Enemy.h"
+
 #include <algorithm>
 
 #define SCREEN_WIDTH 480
@@ -44,18 +48,8 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
         return false;
     }
 
-    GameObject* m_go = new GameObject();
-    GameObject* m_player = new Player();
-    Monster* m_mon1 = new Monster();
-
-    m_go->load(100, 100, 128, 82, "animate");
-    m_player->load(300, 300, 128, 82, "animate");
-    m_mon1->load(100, 500, 128, 82, "animate");
-    m_mon1->set_speed(3);
-
-    m_gameObjects.push_back(m_go);
-    m_gameObjects.push_back(m_player);
-    m_gameObjects.push_back(m_mon1);
+    m_gameObjects.push_back(new Player(new LoaderParams(100, 100, 128, 82, "animate")));
+    m_gameObjects.push_back(new Enemy(new LoaderParams(100, 100, 128, 82, "animate")));
 
     return true;
 }
@@ -74,7 +68,7 @@ void Game::render()
 
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
-        m_gameObjects[i]->draw(m_pRenderer);
+        m_gameObjects[i]->draw();
     }
 
     SDL_RenderPresent(m_pRenderer);

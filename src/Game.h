@@ -2,8 +2,6 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include "GameObject.h"
-#include "Player.h"
-#include "Monster.h"
 
 class Game
 {
