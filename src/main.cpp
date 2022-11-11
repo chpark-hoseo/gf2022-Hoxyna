@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "InputHandler.h"
 #include <iostream>
 
 Game* g_game = 0;
@@ -28,5 +29,6 @@ int main(int argc, char* argv[])
         return -1;
     }
     TheGame::Instance()->clean();
+    TheInputHandler::Instance()->clean();
     return 0;
 }

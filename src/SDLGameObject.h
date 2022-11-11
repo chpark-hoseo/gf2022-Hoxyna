@@ -21,4 +21,6 @@ protected:
 	int m_currentRow;
 	int m_currentFrame;
 	std::string m_textureID;
+
+	bool m_bFlipHorizontal; // °úÁ¦ 3
 };

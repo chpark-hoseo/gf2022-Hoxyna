@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <SDL2/SDL_image.h>
 #include "TextureManager.h"
+#include "InputHandler.h"
 
 #include "Player.h"
 //#include "Monster.h"
@@ -82,23 +83,7 @@ bool Game::running()
 
 void Game::handleEvents()
 {
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        switch (event.type)
-        {
-        case SDL_QUIT:
-            break;
-        case SDL_KEYDOWN:
-            printf("%d 키가 눌렸어요!\n", event.key.keysym.sym);
-            break;
-        case SDL_KEYUP:
-            printf("%d 키가 때졌어요!\n", event.key.keysym.sym);
-            break;
-        default:
-            break;
-        }
-    }
+    TheInputHandler::Instance()->update();
 }
 
 void Game::clean()

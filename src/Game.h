@@ -24,6 +24,7 @@ public:
 	bool running();
 	void handleEvents();
 	void clean();
+	void quit() { m_bRunning = false; }
 
 private:
 	SDL_Window* m_pWindow;
