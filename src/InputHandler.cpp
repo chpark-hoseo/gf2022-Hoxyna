@@ -105,3 +105,5 @@ void InputHandler::onKeyUp()
 {
     m_keystates = SDL_GetKeyboardState(0);
 }
+
+// 과제 3 : isKeyDown 은 지속적인 키입력에 대한 bool 반환, onKeyDown 은 단발적인 키입력(?)
