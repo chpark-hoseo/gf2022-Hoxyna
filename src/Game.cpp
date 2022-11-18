@@ -60,6 +60,40 @@ void Game::update()
     {
         m_gameObjects[i]->update();
     }
+
+    //// rect intersect
+    //for (int i = 0; i < collisionCount; i++)
+    //{
+    //    if (kirbyX + 45 >= xywh[i].x
+    //        && kirbyY + 40 >= xywh[i].y
+    //        && kirbyX <= xywh[i].x + xywh[i].w
+    //        && kirbyY <= xywh[i].y + xywh[i].h)
+    //    {
+    //        if (kirbyX + 45 == xywh[i].x)
+    //            m_bMoveRight = false;
+    //        if (kirbyX == xywh[i].x + xywh[i].w)
+    //            m_bMoveLeft = false;
+    //        if (kirbyY + 40 == xywh[i].y)
+    //            m_bMoveDown = false;
+    //        if (kirbyY == xywh[i].y + xywh[i].h)
+    //            m_bMoveUp = false;
+    //    }
+    //}
+    for (int i = 1; i < m_gameObjects.size(); i++)
+    {
+        // if gameObject0 (Player) intersects other gameObjects
+        if (m_gameObjects[0]->getPosition().getX() + m_gameObjects[0]->getWidth() >= m_gameObjects[i]->getPosition().getX()
+            && m_gameObjects[0]->getPosition().getY() + m_gameObjects[0]->getHeight() >= m_gameObjects[i]->getPosition().getY()
+            && m_gameObjects[0]->getPosition().getX() <= m_gameObjects[i]->getPosition().getX() + m_gameObjects[i]->getWidth()
+            && m_gameObjects[0]->getPosition().getY() <= m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
+        {
+            if (m_gameObjects[0]->getPosition().getX() + m_gameObjects[0]->getWidth() == m_gameObjects[i]->getPosition().getX())
+            {
+                // block right move
+                m_gameObjects[0]->setCanMoveRight(false);
+            }
+        }
+    }
 }
 
 void Game::render()

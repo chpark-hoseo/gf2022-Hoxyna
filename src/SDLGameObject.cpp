@@ -13,10 +13,19 @@ SDLGameObject::SDLGameObject(const LoaderParams* pParams)
     m_currentFrame = 0;
 
     m_bFlipHorizontal = false; // °úÁ¦ 3
+
+    m_canMoveRight = true;
+    m_canMoveLeft = true;
+    m_canMoveUp = true;
+    m_canMoveDown = true;
 }
 
 void SDLGameObject::update()
 {
+    if (!m_canMoveRight && m_velocity.getX() > 0) m_velocity.setX(0);
+    if (!m_canMoveLeft && m_velocity.getX() < 0) m_velocity.setX(0);
+    if (!m_canMoveUp && m_velocity.getY() < 0) m_velocity.setY(0);
+    if (!m_canMoveDown && m_velocity.getY() < 0) m_velocity.setY(0);
     m_velocity += m_acceleration;
     m_position += m_velocity;
 }

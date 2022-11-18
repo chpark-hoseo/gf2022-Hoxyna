@@ -1,7 +1,7 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <vector>
-#include "GameObject.h"
+#include "SDLGameObject.h"
 
 class Game
 {
@@ -33,6 +33,6 @@ private:
 
 	bool m_bRunning;
 
-	std::vector<GameObject*> m_gameObjects;
+	std::vector<SDLGameObject*> m_gameObjects;
 };
 typedef Game TheGame;
