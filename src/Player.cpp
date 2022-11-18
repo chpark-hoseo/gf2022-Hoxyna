@@ -13,9 +13,15 @@ void Player::update()
     handleInput();
 
     if (m_velocity.getX() == 0 && m_velocity.getY() == 0) // °úÁ¦ 2
-        m_currentFrame = 0;
+    {
+        m_currentFrame = ((SDL_GetTicks() / 500) % 2);
+        m_currentRow = 1;
+    }
     else
-        m_currentFrame = ((SDL_GetTicks() / 100) % 6);
+    {
+        m_currentFrame = ((SDL_GetTicks() / 100) % 10);
+        m_currentRow = 0;
+    }
 
 	SDLGameObject::update();
 }

@@ -44,13 +44,12 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 
     m_bRunning = true;
 
-    if (!TheTextureManager::Instance()->load("Assets/animate-alpha.png", "animate", m_pRenderer))
+    if (!TheTextureManager::Instance()->load("Assets/kirbyEdit-alpha.png", "kirbyEdit-alpha", m_pRenderer))
     {
         return false;
     }
 
-    m_gameObjects.push_back(new Player(new LoaderParams(100, 100, 128, 82, "animate")));
-    m_gameObjects.push_back(new Enemy(new LoaderParams(100, 100, 128, 82, "animate")));
+    m_gameObjects.push_back(new Player(new LoaderParams(100, 100, 45, 40, "kirbyEdit-alpha")));
 
     return true;
 }
