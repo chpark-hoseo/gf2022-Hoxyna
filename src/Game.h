@@ -33,6 +33,7 @@ private:
 
 	bool m_bRunning;
 
+	SDLGameObject* m_player;
 	std::vector<SDLGameObject*> m_gameObjects;
 };
 typedef Game TheGame;

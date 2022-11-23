@@ -49,13 +49,24 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
         return false;
     }
 
-    m_gameObjects.push_back(new Player(new LoaderParams(100, 100, 45, 40, "kirbyEdit-alpha")));
+    if (!TheTextureManager::Instance()->load("Assets/wall_1.png", "wall_1", m_pRenderer))
+    {
+        return false;
+    }
+
+    m_player = new Player(new LoaderParams(100, 100, 45, 40, "kirbyEdit-alpha"));
+    m_gameObjects.push_back(new Enemy(new LoaderParams(200, 200, 45, 40, "wall_1")));
+    m_gameObjects.push_back(new Enemy(new LoaderParams(245, 245, 45, 40, "wall_1")));
+    m_gameObjects.push_back(new Enemy(new LoaderParams(290, 200, 45, 40, "wall_1")));
+    m_gameObjects.push_back(new Enemy(new LoaderParams(335, 200, 45, 40, "wall_1")));
+    m_gameObjects.push_back(new Enemy(new LoaderParams(370, 200, 45, 40, "wall_1")));
 
     return true;
 }
 
 void Game::update()
 {
+    m_player->update();
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
         m_gameObjects[i]->update();
@@ -79,19 +90,60 @@ void Game::update()
     //            m_bMoveUp = false;
     //    }
     //}
-    for (int i = 1; i < m_gameObjects.size(); i++)
+    for (int i = 0; i < m_gameObjects.size(); i++)
     {
-        // if gameObject0 (Player) intersects other gameObjects
-        if (m_gameObjects[0]->getPosition().getX() + m_gameObjects[0]->getWidth() >= m_gameObjects[i]->getPosition().getX()
-            && m_gameObjects[0]->getPosition().getY() + m_gameObjects[0]->getHeight() >= m_gameObjects[i]->getPosition().getY()
-            && m_gameObjects[0]->getPosition().getX() <= m_gameObjects[i]->getPosition().getX() + m_gameObjects[i]->getWidth()
-            && m_gameObjects[0]->getPosition().getY() <= m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
+        if (m_player->getPosition().getX() + m_player->getWidth() >= m_gameObjects[i]->getPosition().getX()
+            && m_player->getPosition().getY() + m_player->getHeight() >= m_gameObjects[i]->getPosition().getY()
+            && m_player->getPosition().getX() <= m_gameObjects[i]->getPosition().getX() + m_gameObjects[i]->getWidth()
+            && m_player->getPosition().getY() <= m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
         {
-            if (m_gameObjects[0]->getPosition().getX() + m_gameObjects[0]->getWidth() == m_gameObjects[i]->getPosition().getX())
+            if (m_player->getPosition().getX() + m_player->getWidth() == m_gameObjects[i]->getPosition().getX())
             {
                 // block right move
-                m_gameObjects[0]->setCanMoveRight(false);
+                m_player->setCanMoveRight(false);
+                m_player->setCanMoveLeft(true);
+                m_player->setCanMoveDown(true);
+                m_player->setCanMoveUp(true);
+
+                printf("block move R\n");
             }
+            if (m_player->getPosition().getX() == m_gameObjects[i]->getPosition().getX() + m_gameObjects[i]->getWidth())
+            {
+                // block left move
+                m_player->setCanMoveRight(true);
+                m_player->setCanMoveLeft(false);
+                m_player->setCanMoveDown(true);
+                m_player->setCanMoveUp(true);
+
+                printf("block move L\n");
+            }
+            if (m_player->getPosition().getY() + m_player->getHeight() == m_gameObjects[i]->getPosition().getY())
+            {
+                // block down move
+                m_player->setCanMoveRight(true);
+                m_player->setCanMoveLeft(true);
+                m_player->setCanMoveDown(false);
+                m_player->setCanMoveUp(true);
+
+                printf("block move D\n");
+            }
+            if (m_player->getPosition().getY() == m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
+            {
+                // block up move
+                m_player->setCanMoveRight(true);
+                m_player->setCanMoveLeft(true);
+                m_player->setCanMoveDown(true);
+                m_player->setCanMoveUp(false);
+
+                printf("block move U\n");
+            }
+        }
+        else
+        {
+            m_player->setCanMoveRight(true);
+            m_player->setCanMoveLeft(true);
+            m_player->setCanMoveDown(true);
+            m_player->setCanMoveUp(true);
         }
     }
 }
@@ -100,6 +152,7 @@ void Game::render()
 {
     SDL_RenderClear(m_pRenderer);
 
+    m_player->draw();
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
         m_gameObjects[i]->draw();
