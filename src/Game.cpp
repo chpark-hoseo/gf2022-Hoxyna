@@ -55,11 +55,9 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
     }
 
     m_player = new Player(new LoaderParams(100, 100, 45, 40, "kirbyEdit-alpha"));
-    m_gameObjects.push_back(new Enemy(new LoaderParams(200, 200, 45, 40, "wall_1")));
-    m_gameObjects.push_back(new Enemy(new LoaderParams(245, 245, 45, 40, "wall_1")));
-    m_gameObjects.push_back(new Enemy(new LoaderParams(290, 200, 45, 40, "wall_1")));
-    m_gameObjects.push_back(new Enemy(new LoaderParams(335, 200, 45, 40, "wall_1")));
-    m_gameObjects.push_back(new Enemy(new LoaderParams(370, 200, 45, 40, "wall_1")));
+    m_gameObjects.push_back(new SDLGameObject(new LoaderParams(200, 200, 45, 40, "wall_1")));
+    m_gameObjects.push_back(new SDLGameObject(new LoaderParams(245, 200, 45, 40, "wall_1")));
+    //m_gameObjects.push_back(new SDLGameObject(new LoaderParams(300, 300, 45, 40, "wall_1")));
 
     return true;
 }
@@ -72,24 +70,6 @@ void Game::update()
         m_gameObjects[i]->update();
     }
 
-    //// rect intersect
-    //for (int i = 0; i < collisionCount; i++)
-    //{
-    //    if (kirbyX + 45 >= xywh[i].x
-    //        && kirbyY + 40 >= xywh[i].y
-    //        && kirbyX <= xywh[i].x + xywh[i].w
-    //        && kirbyY <= xywh[i].y + xywh[i].h)
-    //    {
-    //        if (kirbyX + 45 == xywh[i].x)
-    //            m_bMoveRight = false;
-    //        if (kirbyX == xywh[i].x + xywh[i].w)
-    //            m_bMoveLeft = false;
-    //        if (kirbyY + 40 == xywh[i].y)
-    //            m_bMoveDown = false;
-    //        if (kirbyY == xywh[i].y + xywh[i].h)
-    //            m_bMoveUp = false;
-    //    }
-    //}
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
         if (m_player->getPosition().getX() + m_player->getWidth() >= m_gameObjects[i]->getPosition().getX()
