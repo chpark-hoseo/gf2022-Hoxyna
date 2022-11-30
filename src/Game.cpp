@@ -82,38 +82,26 @@ void Game::update()
             {
                 // block right move
                 m_player->setCanMoveRight(false);
-                m_player->setCanMoveLeft(true);
-                m_player->setCanMoveDown(true);
-                m_player->setCanMoveUp(true);
 
                 printf("block move R\n");
             }
             if (m_player->getPosition().getX() == m_gameObjects[i]->getPosition().getX() + m_gameObjects[i]->getWidth())
             {
                 // block left move
-                m_player->setCanMoveRight(true);
                 m_player->setCanMoveLeft(false);
-                m_player->setCanMoveDown(true);
-                m_player->setCanMoveUp(true);
 
                 printf("block move L\n");
             }
             if (m_player->getPosition().getY() + m_player->getHeight() == m_gameObjects[i]->getPosition().getY())
             {
                 // block down move
-                m_player->setCanMoveRight(true);
-                m_player->setCanMoveLeft(true);
                 m_player->setCanMoveDown(false);
-                m_player->setCanMoveUp(true);
 
                 printf("block move D\n");
             }
             if (m_player->getPosition().getY() == m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
             {
                 // block up move
-                m_player->setCanMoveRight(true);
-                m_player->setCanMoveLeft(true);
-                m_player->setCanMoveDown(true);
                 m_player->setCanMoveUp(false);
 
                 printf("block move U\n");
@@ -121,13 +109,14 @@ void Game::update()
         }
         else
         {
-           //m_player->setCanMoveRight(true);
-           //m_player->setCanMoveLeft(true);
-           //m_player->setCanMoveDown(true);
-           //m_player->setCanMoveUp(true);
-           printf("NO BLOCKS\n");
+            //m_player->setCanMoveLeft(true);
+            //m_player->setCanMoveRight(true);
+            //m_player->setCanMoveDown(true);
+            //m_player->setCanMoveUp(true);
+            //printf("NO BLOCKS\n");
         }
     }
+
 }
 
 void Game::render()
@@ -151,7 +140,63 @@ bool Game::running()
 
 void Game::handleEvents()
 {
-    TheInputHandler::Instance()->update();
+    //TheInputHandler::Instance()->update();
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        switch (event.type)
+        {
+        case SDL_QUIT:
+            break;
+        case SDL_KEYDOWN:
+            //printf("%d 키가 눌렸어요!\n", event.key.keysym.sym);
+            switch (event.key.keysym.sym)
+            {
+            case 97:
+                //m_bInput = true;
+                m_player->setCanMoveLeft(true);
+                break;
+            case 100:
+                //m_bInput = true;
+                m_player->setCanMoveRight(true);
+                break;
+            case 115:
+                //m_bInput = true;
+                m_player->setCanMoveDown(true);
+                break;
+            case 119:
+                //m_bInput = true;
+                m_player->setCanMoveUp(true);
+                break;
+            }
+            break;
+        case SDL_KEYUP:
+            //printf("%d 키가 때졌어요!\n", event.key.keysym.sym);
+            //m_bInput = false;
+            switch (event.key.keysym.sym)
+            {
+            case 97:
+                //m_bInput = true;
+                m_player->setCanMoveLeft(false);
+                break;
+            case 100:
+                //m_bInput = true;
+                m_player->setCanMoveRight(false);
+                break;
+            case 115:
+                //m_bInput = true;
+                m_player->setCanMoveDown(false);
+                break;
+            case 119:
+                //m_bInput = true;
+                m_player->setCanMoveUp(false);
+                break;
+            }
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 void Game::clean()
@@ -162,3 +207,61 @@ void Game::clean()
 
     SDL_Quit();
 }
+
+//void Game::handleEvents()
+//{
+//    SDL_Event event;
+//    while (SDL_PollEvent(&event))
+//    {
+//        switch (event.type)
+//        {
+//        case SDL_QUIT:
+//            break;
+//        case SDL_KEYDOWN:
+//            //printf("%d 키가 눌렸어요!\n", event.key.keysym.sym);
+//            switch (event.key.keysym.sym)
+//            {
+//            case 97:
+//                m_bInput = true;
+//                m_bMoveLeft = true;
+//                m_bLookLeft = true;
+//                break;
+//            case 100:
+//                m_bInput = true;
+//                m_bMoveRight = true;
+//                m_bLookLeft = false;
+//                break;
+//            case 115:
+//                m_bInput = true;
+//                m_bMoveDown = true;
+//                break;
+//            case 119:
+//                m_bInput = true;
+//                m_bMoveUp = true;
+//                break;
+//            }
+//            break;
+//        case SDL_KEYUP:
+//            //printf("%d 키가 때졌어요!\n", event.key.keysym.sym);
+//            m_bInput = false;
+//            switch (event.key.keysym.sym)
+//            {
+//            case 97:
+//                m_bMoveLeft = false;
+//                break;
+//            case 100:
+//                m_bMoveRight = false;
+//                break;
+//            case 115:
+//                m_bMoveDown = false;
+//                break;
+//            case 119:
+//                m_bMoveUp = false;
+//                break;
+//            }
+//            break;
+//        default:
+//            break;
+//        }
+//    }
+//}

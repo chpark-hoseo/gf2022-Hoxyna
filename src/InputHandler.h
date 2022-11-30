@@ -32,6 +32,8 @@ public:
     void onKeyDown();
     void onKeyUp();
 
+    int getInputKey() { return inputKey; }
+
 private:
     InputHandler();
     static InputHandler* s_pInstance;
@@ -39,5 +41,7 @@ private:
 
     std::vector<bool> m_mouseButtonStates;
     Vector2D* m_mousePosition;
+
+    int inputKey;
 };
 typedef InputHandler TheInputHandler;

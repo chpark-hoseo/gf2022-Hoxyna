@@ -22,10 +22,6 @@ SDLGameObject::SDLGameObject(const LoaderParams* pParams)
 
 void SDLGameObject::update()
 {
-    if (!m_canMoveRight && m_velocity.getX() >= 0) m_velocity.setX(0);
-    if (!m_canMoveLeft && m_velocity.getX() <= 0) m_velocity.setX(0);
-    if (!m_canMoveUp && m_velocity.getY() <= 0) m_velocity.setY(0);
-    if (!m_canMoveDown && m_velocity.getY() >= 0) m_velocity.setY(0);
     m_velocity += m_acceleration;
     m_position += m_velocity;
 }
