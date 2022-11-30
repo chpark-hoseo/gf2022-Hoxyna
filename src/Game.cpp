@@ -77,6 +77,7 @@ void Game::update()
             && m_player->getPosition().getX() <= m_gameObjects[i]->getPosition().getX() + m_gameObjects[i]->getWidth()
             && m_player->getPosition().getY() <= m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
         {
+            printf("rect intersect\n");
             if (m_player->getPosition().getX() + m_player->getWidth() == m_gameObjects[i]->getPosition().getX())
             {
                 // block right move
@@ -120,10 +121,11 @@ void Game::update()
         }
         else
         {
-            m_player->setCanMoveRight(true);
-            m_player->setCanMoveLeft(true);
-            m_player->setCanMoveDown(true);
-            m_player->setCanMoveUp(true);
+           //m_player->setCanMoveRight(true);
+           //m_player->setCanMoveLeft(true);
+           //m_player->setCanMoveDown(true);
+           //m_player->setCanMoveUp(true);
+           printf("NO BLOCKS\n");
         }
     }
 }
