@@ -69,7 +69,7 @@ void Game::update()
         m_gameObjects[i]->update();
     }
 
-    if (SCREEN_WIDTH >= m_player->getPosition().getX() + m_player->getWidth())
+    if (SCREEN_WIDTH <= m_player->getPosition().getX() + m_player->getWidth())
     {
         printf("BLOCKED RIGHT\n");
         m_player->setCanMoveRight(false);
