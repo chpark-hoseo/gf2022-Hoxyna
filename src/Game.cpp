@@ -71,12 +71,12 @@ void Game::update()
 
     if (SCREEN_WIDTH <= m_player->getPosition().getX() + m_player->getWidth())
     {
-        printf("NO BLOCK\n");
-        m_player->setCanMoveRight(true);
-    }
-    else {
         printf("BLOCKED RIGHT\n");
         m_player->setCanMoveRight(false);
+    }
+    else {
+        printf("NO BLOCK\n");
+        m_player->setCanMoveRight(true);
     }
 
     for (int i = 0; i < m_gameObjects.size(); i++)
