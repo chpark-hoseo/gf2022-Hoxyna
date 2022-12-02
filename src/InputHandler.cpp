@@ -30,9 +30,11 @@ void InputHandler::update()
             break;
         case SDL_KEYDOWN:
             onKeyDown();
+            inputKey = event.key.keysym.sym;
             break;
         case SDL_KEYUP:
             onKeyUp();
+            inputKey = event.key.keysym.sym;
             break;
         default:
             break;

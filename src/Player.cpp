@@ -40,12 +40,12 @@ void Player::handleInput()
     }
     else
         m_velocity.setX(0); // 과제 1
-    if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_UP) && m_canMoveUp) {
-        m_velocity.setY(-2);
-    }
-    else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_DOWN) && m_canMoveDown) {
-        m_velocity.setY(2);
-    }
-    else
-        m_velocity.setY(0); // 과제 1
+    //if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_UP) && m_canMoveUp) {
+    //    m_velocity.setY(-2);
+    //}
+    //else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_DOWN) && m_canMoveDown) {
+    //    m_velocity.setY(2);
+    //}
+    //else
+    //    m_velocity.setY(0); // 과제 1
 }
