@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="include\main.h" />
     <ClInclude Include="src\Enemy.h" />
+    <ClInclude Include="src\FallingBlock.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\InputHandler.h" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\FallingBlock.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\main.cpp" />
