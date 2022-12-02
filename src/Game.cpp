@@ -79,6 +79,16 @@ void Game::update()
         m_player->setCanMoveRight(true);
     }
 
+    if (0 >= m_player->getPosition().getX())
+    {
+        printf("BLOCKED LEFT\n");
+        m_player->setCanMoveLeft(false);
+    }
+    else {
+        printf("NO BLOCK\n");
+        m_player->setCanMoveLeft(true);
+    }
+
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
         if (m_player->getPosition().getX() + m_player->getWidth() >= m_gameObjects[i]->getPosition().getX()
