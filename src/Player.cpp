@@ -30,20 +30,20 @@ void Player::clean() {}
 
 void Player::handleInput()
 {
-    if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT) && m_canMoveRight) {
+    if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_D) && m_canMoveRight) {
         m_velocity.setX(2);
         m_bFlipHorizontal = false;
     }
-    else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_LEFT) && m_canMoveLeft) {
+    else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_A) && m_canMoveLeft) {
         m_velocity.setX(-2);
         m_bFlipHorizontal = true;
     }
     else
         m_velocity.setX(0); // °úÁ¦ 1
-    if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_UP) && m_canMoveUp) {
+    if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_W) && m_canMoveUp) {
         m_velocity.setY(-2);
     }
-    else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_DOWN) && m_canMoveDown) {
+    else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_S) && m_canMoveDown) {
         m_velocity.setY(2);
     }
     else

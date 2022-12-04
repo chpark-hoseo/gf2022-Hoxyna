@@ -17,6 +17,8 @@
 TextureManager* TextureManager::s_pInstance = 0;
 Game* Game::s_pInstance = 0;
 
+SDL_Rect Game::camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+
 bool Game::init(const char* title, int xpos, int ypos, int height, int width, int flags)
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
@@ -53,7 +55,7 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
         return false;
     }
 
-    m_player = new Player(new LoaderParams(100, SCREEN_HEIGHT - 40, 45, 40, "kirbyEdit-alpha"));
+    m_player = new Player(new LoaderParams(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 45, 40, "kirbyEdit-alpha"));
 
     m_gameObjects.push_back(new FallingBlock(new LoaderParams(200, 300, 45, 40, "wall_1")));
     m_gameObjects.push_back(new FallingBlock(new LoaderParams(245, 300, 45, 40, "wall_1")));
@@ -65,6 +67,21 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 
 void Game::update()
 {
+    camera.x = m_player->getPosition().getX() - SCREEN_WIDTH / 2;
+    camera.y = m_player->getPosition().getY() - SCREEN_HEIGHT / 2;
+
+    if (camera.x < 0)
+        camera.x = 0;
+    if (camera.y < 0)
+        camera.y = 0;
+    if (camera.x > camera.w)
+        camera.x = camera.w;
+    if (camera.y > camera.h)
+        camera.y = camera.h;
+
+    printf("camera.x: %f\n", camera.x);
+    //printf("camera.y: %f\n", m_player->getPosition().getY() - SCREEN_HEIGHT / 2);
+
     m_player->update();
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
@@ -83,6 +100,20 @@ void Game::update()
     }
     else {
         m_player->setCanMoveLeft(true);
+    }
+
+    if (SCREEN_HEIGHT <= m_player->getPosition().getY() + m_player->getHeight()) {
+        m_player->setCanMoveDown(false);
+    }
+    else {
+        m_player->setCanMoveDown(true);
+    }
+
+    if (0 >= m_player->getPosition().getY()) {
+        m_player->setCanMoveUp(false);
+    }
+    else {
+        m_player->setCanMoveUp(true);
     }
 
     for (int i = 0; i < m_gameObjects.size(); i++)
@@ -136,7 +167,7 @@ void Game::update()
             && m_player->getPosition().getX() <= m_gameObjects[i]->getPosition().getX() + m_gameObjects[i]->getWidth()
             && m_player->getPosition().getY() <= m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
         {
-            printf("rect intersect\n");
+            //printf("rect intersect\n");
             //if (m_player->getPosition().getX() + m_player->getWidth() == m_gameObjects[i]->getPosition().getX())
             //{
             //    // block right move
@@ -151,13 +182,13 @@ void Game::update()
             //
             //    printf("block move L\n");
             //}
-            if (m_player->getPosition().getY() + m_player->getHeight() == m_gameObjects[i]->getPosition().getY())
-            {
-                // block down move
-                m_player->setCanMoveDown(false);
-
-                printf("block move D\n");
-            }
+            //if (m_player->getPosition().getY() + m_player->getHeight() == m_gameObjects[i]->getPosition().getY())
+            //{
+            //    // block down move
+            //    m_player->setCanMoveDown(false);
+            //
+            //    printf("block move D\n");
+            //}
             //if (m_player->getPosition().getY() == m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
             //{
             //    // block up move
@@ -168,12 +199,30 @@ void Game::update()
         }
         else
         {
-            m_player->setCanMoveLeft(true);
-            m_player->setCanMoveRight(true);
-            m_player->setCanMoveDown(true);
-            m_player->setCanMoveUp(true);
-            printf("NO BLOCKS\n");
+            //printf("NO BLOCKS\n");
+            //m_player->setCanMoveLeft(true);
+            //m_player->setCanMoveRight(true);
+            //m_player->setCanMoveDown(true);
+            //m_player->setCanMoveUp(true);
         }
+
+        //// Fake Camera Move
+        //if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_A)) {
+        //    m_gameObjects[i]->setVelocityX(2);
+        //}
+        //else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_D)) {
+        //    m_gameObjects[i]->setVelocityX(-2);
+        //}
+        //else
+        //    m_gameObjects[i]->setVelocityX(0);
+        //if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_S)) {
+        //    m_gameObjects[i]->setVelocityY(-2);
+        //}
+        //else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_W)) {
+        //    m_gameObjects[i]->setVelocityY(2);
+        //}
+        //else
+        //    m_gameObjects[i]->setVelocityY(0);
     }
 }
 

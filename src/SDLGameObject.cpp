@@ -24,6 +24,9 @@ void SDLGameObject::update()
 {
     m_velocity += m_acceleration;
     m_position += m_velocity;
+
+    m_position.setX(m_position.getX() - Game::camera.x);
+    m_position.setY(m_position.getY() - Game::camera.y);
 }
 
 void SDLGameObject::draw()

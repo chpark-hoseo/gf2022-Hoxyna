@@ -1,5 +1,6 @@
 #include "FallingBlock.h"
 #include "InputHandler.h"
+#include "Game.h"
 
 FallingBlock::FallingBlock(const LoaderParams* pParams) : SDLGameObject(pParams) {}
 

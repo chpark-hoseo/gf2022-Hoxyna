@@ -26,6 +26,8 @@ public:
 	void clean();
 	void quit() { m_bRunning = false; }
 
+	static SDL_Rect camera;
+
 private:
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
