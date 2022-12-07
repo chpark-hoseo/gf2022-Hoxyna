@@ -12,7 +12,7 @@ void FallingBlock::draw()
 void FallingBlock::update()
 {
 	//m_acceleration.setY(0.1f);
-	//m_velocity.setY(5);
+	m_velocity.setY(3);
 	SDLGameObject::update();
 }
 

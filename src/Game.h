@@ -26,7 +26,7 @@ public:
 	void clean();
 	void quit() { m_bRunning = false; }
 
-	static SDL_Rect camera;
+	//static SDL_Rect camera;
 
 private:
 	SDL_Window* m_pWindow;
@@ -37,5 +37,7 @@ private:
 
 	SDLGameObject* m_player;
 	std::vector<SDLGameObject*> m_gameObjects;
+
+	int timer;
 };
 typedef Game TheGame;

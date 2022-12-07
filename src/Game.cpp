@@ -10,6 +10,7 @@
 #include "FallingBlock.h"
 
 #include <algorithm>
+#include <ctime>
 
 #define SCREEN_WIDTH 480
 #define SCREEN_HEIGHT 640
@@ -17,10 +18,11 @@
 TextureManager* TextureManager::s_pInstance = 0;
 Game* Game::s_pInstance = 0;
 
-SDL_Rect Game::camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+//SDL_Rect Game::camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 bool Game::init(const char* title, int xpos, int ypos, int height, int width, int flags)
 {
+    timer = clock();
     if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
         m_pWindow = SDL_CreateWindow(
             title, xpos, ypos, width, height, flags);
@@ -55,51 +57,53 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
         return false;
     }
 
-    m_player = new Player(new LoaderParams(50, 45, 45, 40, "kirbyEdit-alpha"));
+    m_player = new Player(new LoaderParams(SCREEN_WIDTH/2, SCREEN_HEIGHT-40, 45, 40, "kirbyEdit-alpha"));
 
-    // map
-    int world[10][10] = {
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-        { 1, 0, 1, 1, 1, 0, 1, 1, 0, 1 },
-        { 1, 1, 1, 0, 0, 0, 0, 1, 0, 1 },
-        { 1, 0, 1, 0, 1, 1, 0, 1, 0, 1 },
-        { 1, 0, 1, 0, 1, 1, 0, 1, 0, 1 },
-        { 1, 0, 1, 0, 1, 0, 0, 1, 0, 1 },
-        { 1, 0, 1, 0, 1, 1, 1, 1, 1, 1 },
-        { 1, 0, 0, 0, 0, 0, 0, 0, 2, 1 },
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
-    };
+    //// map
+    //int world[10][10] = {
+    //    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    //    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+    //    { 1, 0, 1, 1, 1, 0, 1, 1, 0, 1 },
+    //    { 1, 1, 1, 0, 0, 0, 0, 1, 0, 1 },
+    //    { 1, 0, 1, 0, 1, 1, 0, 1, 0, 1 },
+    //    { 1, 0, 1, 0, 1, 1, 0, 1, 0, 1 },
+    //    { 1, 0, 1, 0, 1, 0, 0, 1, 0, 1 },
+    //    { 1, 0, 1, 0, 1, 1, 1, 1, 1, 1 },
+    //    { 1, 0, 0, 0, 0, 0, 0, 0, 2, 1 },
+    //    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+    //};
+    //
+    //int x = 0;
+    //int y = 0;
+    //
+    //for (int i = 0; i < 10; i++)
+    //{
+    //    for (int j = 0; j < 10; j++)
+    //    {
+    //        if (world[i][j] == 1)
+    //        {
+    //            m_gameObjects.push_back(new FallingBlock(new LoaderParams(x, y, 50, 50, "wall_1")));
+    //        }
+    //        x += 50;
+    //    }
+    //    x = 0;
+    //    y += 50;
+    //}
 
-    int x = 0;
-    int y = 0;
-
-    for (int i = 0; i < 10; i++)
-    {
-        for (int j = 0; j < 10; j++)
-        {
-            if (world[i][j] == 1)
-            {
-                m_gameObjects.push_back(new FallingBlock(new LoaderParams(x, y, 50, 50, "wall_1")));
-            }
-            x += 50;
-        }
-        x = 0;
-        y += 50;
-    }
-
-    //m_gameObjects.push_back(new FallingBlock(new LoaderParams(200, 300, 45, 40, "wall_1")));
-    //m_gameObjects.push_back(new FallingBlock(new LoaderParams(245, 300, 45, 40, "wall_1")));
-    //m_gameObjects.push_back(new FallingBlock(new LoaderParams(290, 300, 45, 40, "wall_1")));
-    //m_gameObjects.push_back(new FallingBlock(new LoaderParams(335, 260, 45, 40, "wall_1")));
+    m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 5, 0, 48, 40, "wall_1")));
+    m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 6, 0, 48, 40, "wall_1")));
+    m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 7, 40, 48, 40, "wall_1")));
+    m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 9, 0, 48, 40, "wall_1")));
 
     return true;
 }
 
 void Game::update()
 {
-    camera.x = m_player->getPosition().getX() - SCREEN_WIDTH / 2;
-    camera.y = m_player->getPosition().getY() - SCREEN_HEIGHT / 2;
+    printf("%d\n", (clock() - timer) / 1000); // 블록 좌표 0~9 rand, blockCount로 총 있어야될 블록 개수 정함. 생성된 블록과 있어야될 블록 개수 차이 계산후 생성
+
+    //camera.x = m_player->getPosition().getX() - SCREEN_WIDTH / 2;
+    //camera.y = m_player->getPosition().getY() - SCREEN_HEIGHT / 2;
 
     //if (camera.x < 0)
     //    camera.x = 0;
@@ -133,66 +137,22 @@ void Game::update()
         m_player->setCanMoveLeft(true);
     }
 
-    if (SCREEN_HEIGHT <= m_player->getPosition().getY() + m_player->getHeight()) {
-        m_player->setCanMoveDown(false);
-    }
-    else {
-        m_player->setCanMoveDown(true);
-    }
-
-    if (0 >= m_player->getPosition().getY()) {
-        m_player->setCanMoveUp(false);
-    }
-    else {
-        m_player->setCanMoveUp(true);
-    }
+    //if (SCREEN_HEIGHT <= m_player->getPosition().getY() + m_player->getHeight()) {
+    //    m_player->setCanMoveDown(false);
+    //}
+    //else {
+    //    m_player->setCanMoveDown(true);
+    //}
+    //
+    //if (0 >= m_player->getPosition().getY()) {
+    //    m_player->setCanMoveUp(false);
+    //}
+    //else {
+    //    m_player->setCanMoveUp(true);
+    //}
 
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
-        //if (m_player->getPosition().getX() + m_player->getWidth() >= m_gameObjects[i]->getPosition().getX()
-        //    && m_player->getPosition().getY() + m_player->getHeight() >= m_gameObjects[i]->getPosition().getY()
-        //    && m_player->getPosition().getX() <= m_gameObjects[i]->getPosition().getX() + m_gameObjects[i]->getWidth()
-        //    && m_player->getPosition().getY() <= m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
-        //{
-        //    printf("rect intersect\n");
-        //    if (m_player->getPosition().getX() + m_player->getWidth() == m_gameObjects[i]->getPosition().getX())
-        //    {
-        //        // block right move
-        //        m_player->setCanMoveRight(false);
-        //    
-        //        printf("block move R\n");
-        //    }
-        //    if (m_player->getPosition().getX() == m_gameObjects[i]->getPosition().getX() + m_gameObjects[i]->getWidth())
-        //    {
-        //        // block left move
-        //        m_player->setCanMoveLeft(false);
-        //    
-        //        printf("block move L\n");
-        //    }
-        //    if (m_player->getPosition().getY() + m_player->getHeight() == m_gameObjects[i]->getPosition().getY())
-        //    {
-        //        // block down move
-        //        m_player->setCanMoveDown(false);
-        //    
-        //        printf("block move D\n");
-        //    }
-        //    if (m_player->getPosition().getY() == m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
-        //    {
-        //        // block up move
-        //        m_player->setCanMoveUp(false);
-        //    
-        //        printf("block move U\n");
-        //    }
-        //}
-        //else
-        //{
-        //    m_player->setCanMoveLeft(true);
-        //    m_player->setCanMoveRight(true);
-        //    m_player->setCanMoveDown(true);
-        //    m_player->setCanMoveUp(true);
-        //    printf("NO BLOCKS\n");
-        //}
-
         if (m_player->getPosition().getX() + m_player->getWidth() >= m_gameObjects[i]->getPosition().getX()
             && m_player->getPosition().getY() + m_player->getHeight() >= m_gameObjects[i]->getPosition().getY()
             && m_player->getPosition().getX() <= m_gameObjects[i]->getPosition().getX() + m_gameObjects[i]->getWidth()
@@ -230,7 +190,7 @@ void Game::update()
         }
         else
         {
-            printf("NO BLOCKS\n");
+            //printf("NO BLOCKS\n");
             //m_player->setCanMoveLeft(true);
             //m_player->setCanMoveRight(true);
             //m_player->setCanMoveDown(true);
