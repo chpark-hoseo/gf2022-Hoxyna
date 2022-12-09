@@ -10,7 +10,9 @@
 #include "FallingBlock.h"
 
 #include <algorithm>
+
 #include <ctime>
+#include <random>
 
 #define SCREEN_WIDTH 480
 #define SCREEN_HEIGHT 640
@@ -31,7 +33,7 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
 
             if (m_pRenderer != 0) {
                 SDL_SetRenderDrawColor(
-                    m_pRenderer, 255, 0, 0, 255);
+                    m_pRenderer, 0, 0, 0, 255);
             }
             else {
                 return false; // 랜더러 생성 실패
@@ -58,6 +60,7 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
     }
 
     m_player = new Player(new LoaderParams(SCREEN_WIDTH/2, SCREEN_HEIGHT-40, 45, 40, "kirbyEdit-alpha"));
+    playerRender = true;
 
     //// map
     //int world[10][10] = {
@@ -90,17 +93,42 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
     //    y += 50;
     //}
 
-    m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 5, 0, 48, 40, "wall_1")));
-    m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 6, 0, 48, 40, "wall_1")));
-    m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 7, 40, 48, 40, "wall_1")));
-    m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 9, 0, 48, 40, "wall_1")));
+    //m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 5, 0, 48, 40, "wall_1")));
+    //m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 6, 0, 48, 40, "wall_1")));
+    //m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 7, 40, 48, 40, "wall_1")));
+    //m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 9, 0, 48, 40, "wall_1")));
 
     return true;
 }
 
 void Game::update()
 {
-    printf("%d\n", (clock() - timer) / 1000); // 블록 좌표 0~9 rand, blockCount로 총 있어야될 블록 개수 정함. 생성된 블록과 있어야될 블록 개수 차이 계산후 생성
+    // level
+    int level = (clock() - timer) / 10000;
+
+    // createDuration(ms)
+    createDuration = 1000 - level * 100;
+    if (createDuration < 300)
+        createDuration = 300;
+
+    term = (clock() - timer) / createDuration;
+    if (term > termSaved)
+    {
+        termSaved = term;
+        maxBlockCount++;
+    }
+
+    printf("%d\n", createDuration);
+
+    // createBlock
+    if (curBlockCount < maxBlockCount)
+    {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> dis(0, 9);
+        m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * dis(gen), 0, 48, 48, "wall_1")));
+        curBlockCount++;
+    }
 
     //camera.x = m_player->getPosition().getX() - SCREEN_WIDTH / 2;
     //camera.y = m_player->getPosition().getY() - SCREEN_HEIGHT / 2;
@@ -159,6 +187,8 @@ void Game::update()
             && m_player->getPosition().getY() <= m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
         {
             printf("rect intersect\n");
+            m_gameObjects.erase(m_gameObjects.begin() + i);
+            playerRender = false;
             //if (m_player->getPosition().getX() + m_player->getWidth() == m_gameObjects[i]->getPosition().getX())
             //{
             //    // block right move
@@ -203,7 +233,8 @@ void Game::render()
 {
     SDL_RenderClear(m_pRenderer);
 
-    m_player->draw();
+    if (playerRender)
+        m_player->draw();
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
         m_gameObjects[i]->draw();

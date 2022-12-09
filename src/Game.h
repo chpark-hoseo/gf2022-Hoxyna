@@ -39,5 +39,11 @@ private:
 	std::vector<SDLGameObject*> m_gameObjects;
 
 	int timer;
+	int term, termSaved;
+	int createDuration;
+	int maxBlockCount;
+	int curBlockCount;
+
+	bool playerRender;
 };
 typedef Game TheGame;

@@ -12,4 +12,7 @@ public:
     virtual void update();
     virtual void clean();
     void handleInput();
+    
+    bool isInvincible; // invincible item
+    bool isBoosted; // boost item
 };
