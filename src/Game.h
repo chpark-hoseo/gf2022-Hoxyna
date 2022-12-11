@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include "SDLGameObject.h"
+#include "Player.h"
 
 class Game
 {
@@ -35,10 +36,14 @@ private:
 
 	bool m_bRunning;
 
-	SDLGameObject* m_player;
-	std::vector<SDLGameObject*> m_gameObjects;
+	Player* m_player;
+	std::vector<SDLGameObject*> m_fallingBlocks;
+	std::vector<SDLGameObject*> m_potionReds;
+	std::vector<SDLGameObject*> m_potionGreens;
+	std::vector<SDLGameObject*> m_potionYellows;
 
 	int timer;
+	int initTime;
 	int term, termSaved;
 	int createDuration;
 	int maxBlockCount;

@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "InputHandler.h"
+#include <ctime>
 
 Player::Player(const LoaderParams* pParams) : SDLGameObject(pParams) {}
 
@@ -23,6 +24,24 @@ void Player::update()
         m_currentRow = 0;
     }
 
+    if (isInvincible)
+    {
+        if (timer > inv_endTime)
+        {
+            printf("endInv\n");
+            isInvincible = false;
+        }
+    }
+
+    if (isBoosted)
+    {
+        if (timer > boo_endTime)
+        {
+            printf("endBoosted\n");
+            isBoosted = false;
+        }
+    }
+
 	SDLGameObject::update();
 }
 
@@ -31,15 +50,21 @@ void Player::clean() {}
 void Player::handleInput()
 {
     if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_D) && m_canMoveRight) {
-        m_velocity.setX(2);
+        if (isBoosted)
+            m_velocity.setX(4);
+        else
+            m_velocity.setX(2);
         m_bFlipHorizontal = false;
     }
     else if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_A) && m_canMoveLeft) {
-        m_velocity.setX(-2);
+        if (isBoosted)
+            m_velocity.setX(-4);
+        else
+            m_velocity.setX(-2);
         m_bFlipHorizontal = true;
     }
     else
-        m_velocity.setX(0); // 과제 1
+        m_velocity.setX(0);
     //if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_W) && m_canMoveUp) {
     //    m_velocity.setY(-2);
     //}
@@ -47,5 +72,5 @@ void Player::handleInput()
     //    m_velocity.setY(2);
     //}
     //else
-    //    m_velocity.setY(0); // 과제 1
+    //    m_velocity.setY(0);
 }

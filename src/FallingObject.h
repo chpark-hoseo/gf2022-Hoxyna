@@ -4,12 +4,14 @@
 
 #include "SDLGameObject.h"
 
-class Enemy : public SDLGameObject
+class FallingObject : public SDLGameObject
 {
 public:
-    Enemy(const LoaderParams* pParams);
+    FallingObject(const LoaderParams* pParams);
     virtual void draw();
     virtual void update();
     virtual void clean();
     void handleInput();
+
+    void setVelocityY(int input) { m_velocity.setY(input); }
 };

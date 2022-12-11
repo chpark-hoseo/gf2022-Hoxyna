@@ -39,16 +39,13 @@
     <ClInclude Include="src\SDLGameObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\Enemy.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\Vector2D.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\InputHandler.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\FallingBlock.h">
+    <ClInclude Include="src\FallingObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,16 +65,13 @@
     <ClCompile Include="src\SDLGameObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\Enemy.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\Vector2D.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\InputHandler.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\FallingBlock.cpp">
+    <ClCompile Include="src\FallingObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

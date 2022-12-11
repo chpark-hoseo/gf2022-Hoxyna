@@ -7,7 +7,7 @@
 #include "InputHandler.h"
 
 #include "Player.h"
-#include "FallingBlock.h"
+#include "FallingObject.h"
 
 #include <algorithm>
 
@@ -24,7 +24,7 @@ Game* Game::s_pInstance = 0;
 
 bool Game::init(const char* title, int xpos, int ypos, int height, int width, int flags)
 {
-    timer = clock();
+    initTime = clock();
     if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
         m_pWindow = SDL_CreateWindow(
             title, xpos, ypos, width, height, flags);
@@ -59,66 +59,52 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
         return false;
     }
 
+    if (!TheTextureManager::Instance()->load("Assets/potion_red.png", "potion_red", m_pRenderer))
+    {
+        return false;
+    }
+
+    if (!TheTextureManager::Instance()->load("Assets/potion_green.png", "potion_green", m_pRenderer))
+    {
+        return false;
+    }
+
+    if (!TheTextureManager::Instance()->load("Assets/potion_yellow.png", "potion_yellow", m_pRenderer))
+    {
+        return false;
+    }
+
     m_player = new Player(new LoaderParams(SCREEN_WIDTH/2, SCREEN_HEIGHT-40, 45, 40, "kirbyEdit-alpha"));
+    m_player->setHp(3);
+    printf("playerHp: %d\n", m_player->getHp());
     playerRender = true;
-
-    //// map
-    //int world[10][10] = {
-    //    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-    //    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-    //    { 1, 0, 1, 1, 1, 0, 1, 1, 0, 1 },
-    //    { 1, 1, 1, 0, 0, 0, 0, 1, 0, 1 },
-    //    { 1, 0, 1, 0, 1, 1, 0, 1, 0, 1 },
-    //    { 1, 0, 1, 0, 1, 1, 0, 1, 0, 1 },
-    //    { 1, 0, 1, 0, 1, 0, 0, 1, 0, 1 },
-    //    { 1, 0, 1, 0, 1, 1, 1, 1, 1, 1 },
-    //    { 1, 0, 0, 0, 0, 0, 0, 0, 2, 1 },
-    //    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
-    //};
-    //
-    //int x = 0;
-    //int y = 0;
-    //
-    //for (int i = 0; i < 10; i++)
-    //{
-    //    for (int j = 0; j < 10; j++)
-    //    {
-    //        if (world[i][j] == 1)
-    //        {
-    //            m_gameObjects.push_back(new FallingBlock(new LoaderParams(x, y, 50, 50, "wall_1")));
-    //        }
-    //        x += 50;
-    //    }
-    //    x = 0;
-    //    y += 50;
-    //}
-
-    //m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 5, 0, 48, 40, "wall_1")));
-    //m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 6, 0, 48, 40, "wall_1")));
-    //m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 7, 40, 48, 40, "wall_1")));
-    //m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * 9, 0, 48, 40, "wall_1")));
+    m_player->setInvincible(false);
+    m_player->setBoosted(false);
 
     return true;
 }
 
 void Game::update()
 {
+    timer = (clock() - initTime) / 1000;
+    m_player->setTimer(timer);
+
     // level
-    int level = (clock() - timer) / 10000;
+    int level = (clock() - initTime) / 10000;
 
     // createDuration(ms)
     createDuration = 1000 - level * 100;
     if (createDuration < 300)
         createDuration = 300;
 
-    term = (clock() - timer) / createDuration;
+    term = (clock() - initTime) / createDuration;
     if (term > termSaved)
     {
         termSaved = term;
         maxBlockCount++;
     }
 
-    printf("%d\n", createDuration);
+    //printf("%d\n", timer);
 
     // createBlock
     if (curBlockCount < maxBlockCount)
@@ -126,29 +112,60 @@ void Game::update()
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<int> dis(0, 9);
-        m_gameObjects.push_back(new FallingBlock(new LoaderParams(48 * dis(gen), 0, 48, 48, "wall_1")));
+        switch (dis(gen))
+        {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+            m_fallingBlocks.push_back(new FallingObject(new LoaderParams(48 * dis(gen), 0, 48, 48, "wall_1")));
+            break;
+        case 9:
+            switch (dis(gen))
+            {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                m_potionReds.push_back(new FallingObject(new LoaderParams(48 * dis(gen), 0, 48, 48, "potion_red")));
+                break;
+            case 4:
+            case 5:
+            case 6:
+                m_potionGreens.push_back(new FallingObject(new LoaderParams(48 * dis(gen), 0, 48, 48, "potion_green")));
+                break;
+            case 7:
+            case 8:
+            case 9:
+                m_potionYellows.push_back(new FallingObject(new LoaderParams(48 * dis(gen), 0, 48, 48, "potion_yellow")));
+                break;
+            }
+            break;
+        }
         curBlockCount++;
     }
 
-    //camera.x = m_player->getPosition().getX() - SCREEN_WIDTH / 2;
-    //camera.y = m_player->getPosition().getY() - SCREEN_HEIGHT / 2;
-
-    //if (camera.x < 0)
-    //    camera.x = 0;
-    //if (camera.y < 0)
-    //    camera.y = 0;
-    //if (camera.x > camera.w)
-    //    camera.x = camera.w;
-    //if (camera.y > camera.h)
-    //    camera.y = camera.h;
-
-    //printf("camera.x: %d\n", camera.x);
-    //printf("camera.y: %f\n", m_player->getPosition().getY() - SCREEN_HEIGHT / 2);
-
     m_player->update();
-    for (int i = 0; i < m_gameObjects.size(); i++)
+    for (int i = 0; i < m_fallingBlocks.size(); i++)
     {
-        m_gameObjects[i]->update();
+        m_fallingBlocks[i]->update();
+    }
+    for (int i = 0; i < m_potionReds.size(); i++)
+    {
+        m_potionReds[i]->update();
+    }
+    for (int i = 0; i < m_potionGreens.size(); i++)
+    {
+        m_potionGreens[i]->update();
+    }
+    for (int i = 0; i < m_potionYellows.size(); i++)
+    {
+        m_potionYellows[i]->update();
     }
 
     if (SCREEN_WIDTH <= m_player->getPosition().getX() + m_player->getWidth()) {
@@ -165,66 +182,64 @@ void Game::update()
         m_player->setCanMoveLeft(true);
     }
 
-    //if (SCREEN_HEIGHT <= m_player->getPosition().getY() + m_player->getHeight()) {
-    //    m_player->setCanMoveDown(false);
-    //}
-    //else {
-    //    m_player->setCanMoveDown(true);
-    //}
-    //
-    //if (0 >= m_player->getPosition().getY()) {
-    //    m_player->setCanMoveUp(false);
-    //}
-    //else {
-    //    m_player->setCanMoveUp(true);
-    //}
-
-    for (int i = 0; i < m_gameObjects.size(); i++)
+    for (int i = 0; i < m_fallingBlocks.size(); i++)
     {
-        if (m_player->getPosition().getX() + m_player->getWidth() >= m_gameObjects[i]->getPosition().getX()
-            && m_player->getPosition().getY() + m_player->getHeight() >= m_gameObjects[i]->getPosition().getY()
-            && m_player->getPosition().getX() <= m_gameObjects[i]->getPosition().getX() + m_gameObjects[i]->getWidth()
-            && m_player->getPosition().getY() <= m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
+        if (m_player->getPosition().getX() + m_player->getWidth() >= m_fallingBlocks[i]->getPosition().getX()
+            && m_player->getPosition().getY() + m_player->getHeight() >= m_fallingBlocks[i]->getPosition().getY()
+            && m_player->getPosition().getX() <= m_fallingBlocks[i]->getPosition().getX() + m_fallingBlocks[i]->getWidth()
+            && m_player->getPosition().getY() <= m_fallingBlocks[i]->getPosition().getY() + m_fallingBlocks[i]->getHeight())
         {
             printf("rect intersect\n");
-            m_gameObjects.erase(m_gameObjects.begin() + i);
-            playerRender = false;
-            //if (m_player->getPosition().getX() + m_player->getWidth() == m_gameObjects[i]->getPosition().getX())
-            //{
-            //    // block right move
-            //    m_player->setCanMoveRight(false);
-            //
-            //    printf("block move R\n");
-            //}
-            //if (m_player->getPosition().getX() == m_gameObjects[i]->getPosition().getX() + m_gameObjects[i]->getWidth())
-            //{
-            //    // block left move
-            //    m_player->setCanMoveLeft(false);
-            //
-            //    printf("block move L\n");
-            //}
-            //if (m_player->getPosition().getY() + m_player->getHeight() == m_gameObjects[i]->getPosition().getY())
-            //{
-            //    // block down move
-            //    m_player->setCanMoveDown(false);
-            //
-            //    printf("block move D\n");
-            //}
-            //if (m_player->getPosition().getY() == m_gameObjects[i]->getPosition().getY() + m_gameObjects[i]->getHeight())
-            //{
-            //    // block up move
-            //    m_player->setCanMoveUp(false);
-            //
-            //    printf("block move U\n");
-            //}
+            m_fallingBlocks.erase(m_fallingBlocks.begin() + i);
+            if (m_player->getInvincible() == false)
+            {
+                system("cls");
+                m_player->setHp(m_player->getHp() - 1);
+                printf("playerHp: %d\n", m_player->getHp());
+            }
         }
-        else
+    }
+
+    for (int i = 0; i < m_potionReds.size(); i++)
+    {
+        if (m_player->getPosition().getX() + m_player->getWidth() >= m_potionReds[i]->getPosition().getX()
+            && m_player->getPosition().getY() + m_player->getHeight() >= m_potionReds[i]->getPosition().getY()
+            && m_player->getPosition().getX() <= m_potionReds[i]->getPosition().getX() + m_potionReds[i]->getWidth()
+            && m_player->getPosition().getY() <= m_potionReds[i]->getPosition().getY() + m_potionReds[i]->getHeight())
         {
-            //printf("NO BLOCKS\n");
-            //m_player->setCanMoveLeft(true);
-            //m_player->setCanMoveRight(true);
-            //m_player->setCanMoveDown(true);
-            //m_player->setCanMoveUp(true);
+            system("cls");
+            printf("red potion: increase hp\n");
+            m_potionReds.erase(m_potionReds.begin() + i);
+            m_player->setHp(m_player->getHp() + 1);
+            printf("playerHp: %d\n", m_player->getHp());
+        }
+    }
+
+    for (int i = 0; i < m_potionGreens.size(); i++)
+    {
+        if (m_player->getPosition().getX() + m_player->getWidth() >= m_potionGreens[i]->getPosition().getX()
+            && m_player->getPosition().getY() + m_player->getHeight() >= m_potionGreens[i]->getPosition().getY()
+            && m_player->getPosition().getX() <= m_potionGreens[i]->getPosition().getX() + m_potionGreens[i]->getWidth()
+            && m_player->getPosition().getY() <= m_potionGreens[i]->getPosition().getY() + m_potionGreens[i]->getHeight())
+        {
+            printf("green potion: speed up for 10sec\n");
+            m_potionGreens.erase(m_potionGreens.begin() + i);
+            m_player->setBoosted(true);
+            m_player->setBooEndTime(timer + 10);
+        }
+    }
+
+    for (int i = 0; i < m_potionYellows.size(); i++)
+    {
+        if (m_player->getPosition().getX() + m_player->getWidth() >= m_potionYellows[i]->getPosition().getX()
+            && m_player->getPosition().getY() + m_player->getHeight() >= m_potionYellows[i]->getPosition().getY()
+            && m_player->getPosition().getX() <= m_potionYellows[i]->getPosition().getX() + m_potionYellows[i]->getWidth()
+            && m_player->getPosition().getY() <= m_potionYellows[i]->getPosition().getY() + m_potionYellows[i]->getHeight())
+        {
+            printf("yellow potion: invincible for 5sec\n");
+            m_potionYellows.erase(m_potionYellows.begin() + i);
+            m_player->setInvincible(true);
+            m_player->setInvEndTime(timer + 5);
         }
     }
 }
@@ -235,9 +250,21 @@ void Game::render()
 
     if (playerRender)
         m_player->draw();
-    for (int i = 0; i < m_gameObjects.size(); i++)
+    for (int i = 0; i < m_fallingBlocks.size(); i++)
     {
-        m_gameObjects[i]->draw();
+        m_fallingBlocks[i]->draw();
+    }
+    for (int i = 0; i < m_potionReds.size(); i++)
+    {
+        m_potionReds[i]->draw();
+    }
+    for (int i = 0; i < m_potionGreens.size(); i++)
+    {
+        m_potionGreens[i]->draw();
+    }
+    for (int i = 0; i < m_potionYellows.size(); i++)
+    {
+        m_potionYellows[i]->draw();
     }
 
     SDL_RenderPresent(m_pRenderer);
@@ -258,6 +285,9 @@ void Game::clean()
     SDL_DestroyWindow(m_pWindow);
     SDL_DestroyRenderer(m_pRenderer);
     TheTextureManager::Instance()->destroyTexture("animate");
+    TheTextureManager::Instance()->destroyTexture("potion_red");
+    TheTextureManager::Instance()->destroyTexture("potion_green");
+    TheTextureManager::Instance()->destroyTexture("potion_yellow");
 
     SDL_Quit();
 }
