@@ -13,7 +13,7 @@ void Player::update()
 {
     handleInput();
 
-    if (m_velocity.getX() == 0 && m_velocity.getY() == 0) // °úÁ¦ 2
+    if (m_velocity.getX() == 0 && m_velocity.getY() == 0)
     {
         m_currentFrame = ((SDL_GetTicks() / 500) % 2);
         m_currentRow = 1;

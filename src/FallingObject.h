@@ -12,6 +12,4 @@ public:
     virtual void update();
     virtual void clean();
     void handleInput();
-
-    void setVelocityY(int input) { m_velocity.setY(input); }
 };

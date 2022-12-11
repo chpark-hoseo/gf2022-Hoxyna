@@ -31,7 +31,7 @@ protected:
 	int m_currentFrame;
 	std::string m_textureID;
 
-	bool m_bFlipHorizontal; // °úÁ¦ 3
+	bool m_bFlipHorizontal;
 
 	bool m_canMoveRight;
 	bool m_canMoveLeft;

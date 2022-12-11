@@ -77,7 +77,6 @@ bool Game::init(const char* title, int xpos, int ypos, int height, int width, in
     m_player = new Player(new LoaderParams(SCREEN_WIDTH/2, SCREEN_HEIGHT-40, 45, 40, "kirbyEdit-alpha"));
     m_player->setHp(3);
     printf("playerHp: %d\n", m_player->getHp());
-    playerRender = true;
     m_player->setInvincible(false);
     m_player->setBoosted(false);
 
@@ -248,8 +247,7 @@ void Game::render()
 {
     SDL_RenderClear(m_pRenderer);
 
-    if (playerRender)
-        m_player->draw();
+    m_player->draw();
     for (int i = 0; i < m_fallingBlocks.size(); i++)
     {
         m_fallingBlocks[i]->draw();
